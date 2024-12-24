@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from app.models.checklist_model import Checklist as DBChecklist, ChecklistItem as DBChecklistItem, Checklist, \
+from models.checklist_model import Checklist as DBChecklist, ChecklistItem as DBChecklistItem, Checklist, \
     ChecklistItem
-from app.schemas.checklist_schema import ChecklistCreate, ChecklistUpdate, Checklist as ChecklistSchema
+from schemas.checklist_schema import ChecklistCreate, ChecklistUpdate, Checklist as ChecklistSchema
 
 
 def create_checklist(db: Session, checklist: ChecklistCreate):
