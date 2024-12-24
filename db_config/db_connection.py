@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 from root.root_elements import settings
 
-DATABASE_URL = settings.DATABASE_URL
+DATABASE_URL = settings.DB_Connection
 
 # SQLAlchemy specific
 engine = create_engine(DATABASE_URL)
