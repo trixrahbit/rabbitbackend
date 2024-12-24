@@ -2,10 +2,10 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from app.models.templates.templateModel import Template, TemplatePhase, TemplateTask, TemplateSprint, TemplateStory
-from app.schemas.template import template_schema as schemas
-from app.api.user.user_router import get_db
-from app.schemas.template.template_schema import PhaseCreate, TaskCreate, StoryCreate, SprintCreate
+from models.templates.templateModel import Template, TemplatePhase, TemplateTask, TemplateSprint, TemplateStory
+from schemas.template import template_schema as schemas
+from api.user.user_router import get_db
+from schemas.template.template_schema import PhaseCreate, TaskCreate, StoryCreate, SprintCreate
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

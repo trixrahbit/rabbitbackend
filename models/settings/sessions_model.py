@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, String
 from sqlalchemy.orm import relationship
 
-from app.models.models import Base
+from models.models import Base
 
 
 class SessionsModel(Base):

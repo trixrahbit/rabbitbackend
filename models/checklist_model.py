@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from app.models import Base
+from models import Base
 
 class Checklist(Base):
     __tablename__ = "checklists"

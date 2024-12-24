@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.models import Client, Organization
-from app.schemas.schemas import ClientSchema
+from api.user.user_router import get_db
+from models.models import Client, Organization
+from schemas.schemas import ClientSchema
 
 router = APIRouter()
 

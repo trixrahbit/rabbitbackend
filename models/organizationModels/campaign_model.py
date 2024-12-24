@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func, Numeric
 from sqlalchemy.orm import relationship
 
-from app.db_config.db_connection import Base
+from db_config.db_connection import Base
 class Campaign(Base):
     __tablename__ = 'campaigns'
     id = Column(Integer, primary_key=True)

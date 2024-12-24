@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 
-from app.models import Base
+from models import Base
 
 
 class NotificationSettings(Base):

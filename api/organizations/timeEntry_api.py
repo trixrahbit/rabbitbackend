@@ -3,9 +3,9 @@ from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.organizationModels.timeentry_model import TimeEntry
-from app.schemas.organizations.timeEntry_schema import TimeEntrySchema
+from api.user.user_router import get_db
+from models.organizationModels.timeentry_model import TimeEntry
+from schemas.organizations.timeEntry_schema import TimeEntrySchema
 
 router = APIRouter()
 

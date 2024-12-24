@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.organizationModels.kbArticle_model import KnowledgeBaseArticle
-from app.schemas.organizations.kbArticle_schema import KbArticleSchema
+from api.user.user_router import get_db
+from models.organizationModels.kbArticle_model import KnowledgeBaseArticle
+from schemas.organizations.kbArticle_schema import KbArticleSchema
 
 router = APIRouter()
 

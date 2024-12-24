@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Table, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from app.models import Base
+from models import Base
 
 # Association table for users and roles
 user_roles = Table('user_role', Base.metadata,

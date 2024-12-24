@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.models import models
-from app.schemas import schemas
+from models import models
+from schemas import schemas
 
 
 def assign_role_to_user(db: Session, assignment: schemas.UserRoleOrgCreate):

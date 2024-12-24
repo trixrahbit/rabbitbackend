@@ -4,7 +4,7 @@ import logging
 from fastapi import APIRouter
 from typing import List
 
-from app.schemas.organizations.ticket_schema import TicketSchema
+from schemas.organizations.ticket_schema import TicketSchema
 
 router = APIRouter()
 

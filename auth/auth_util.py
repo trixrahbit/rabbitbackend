@@ -4,8 +4,8 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from starlette import status
 from jose import jwt, JWTError
-from app.api.user.user_router import get_db
-from app.models.models import User
+from api.user.user_router import get_db
+from models.models import User
 
 SECRET_KEY = "YOUR_SECRET_KEY"  # Use a strong secret key
 ALGORITHM = "HS256"

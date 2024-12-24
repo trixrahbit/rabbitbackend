@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from app.api.user.user_router import get_db
-from app.models.models import Role, ClientRole
-from app.schemas.schemas import RoleSchema, RoleCreateSchema
+from api.user.user_router import get_db
+from models.models import Role, ClientRole
+from schemas.schemas import RoleSchema, RoleCreateSchema
 
 router = APIRouter()
 

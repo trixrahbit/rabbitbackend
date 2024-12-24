@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, JSON,
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from app.models import Base
+from models import Base
 
 
 class SubscriptionPlan(Base):

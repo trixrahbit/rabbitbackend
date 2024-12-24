@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends
 from typing import List
 
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.models import Organization
-from app.models.organizationModels.incident_model import IncidentReport
-from app.schemas.organizations.incident_schema import IncidentSchema
+from api.user.user_router import get_db
+from models.models import Organization
+from models.organizationModels.incident_model import IncidentReport
+from schemas.organizations.incident_schema import IncidentSchema
 
 router = APIRouter()
 

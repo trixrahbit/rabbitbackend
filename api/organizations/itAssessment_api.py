@@ -5,9 +5,9 @@ from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.models import Organization
-from app.schemas.organizations.itAssessment_schema import ItAssessmentSchema
+from api.user.user_router import get_db
+from models.models import Organization
+from schemas.organizations.itAssessment_schema import ItAssessmentSchema
 
 router = APIRouter()
 

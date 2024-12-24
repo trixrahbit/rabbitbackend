@@ -1,22 +1,22 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api.checklists import checklist_router
-from app.api.calendar import calendar_router
-from app.api.integrations.outlook import outlook_oauth
-from app.api.subscription import subscription_router
-from app.api.ticketing import ticket_router
-from app.api.projects import project_router
-from app.api.templates import template_router
+from api.checklists import checklist_router
+from api.calendar import calendar_router
+from api.integrations.outlook import outlook_oauth
+from api.subscription import subscription_router
+from api.ticketing import ticket_router
+from api.projects import project_router
+from api.templates import template_router
 import logging
 
-from app.api.client import client_get, client_post
-from app.api.organizations import organizations_api
-from app.api.profile import user_profile
-from app.api.role import role_get
-from app.api.settings.usercreation import create
-from app.api.settings.userlogin import login
-from app.api.user import user_get, user_router, user_api
+from api.client import client_get, client_post
+from api.organizations import organizations_api
+from api.profile import user_profile
+from api.role import role_get
+from api.settings.usercreation import create
+from api.settings.userlogin import login
+from api.user import user_get, user_router, user_api
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)

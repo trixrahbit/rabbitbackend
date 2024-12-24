@@ -6,21 +6,21 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
-from app.api.user.user_router import get_db
-from app.core.calendar.calavail import fetch_user_available_times
-from app.models import User
-from app.models.calendar.calendar_model import CalendarEvent as CalendarEventModel
-from app.models.models import BusinessHours
-from app.schemas.calendar.calendar_schema import CalendarEventCreate, CalendarEventUpdate, \
+from api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
+from api.user.user_router import get_db
+from core.calendar.calavail import fetch_user_available_times
+from models import User
+from models.calendar.calendar_model import CalendarEvent as CalendarEventModel
+from models.models import BusinessHours
+from schemas.calendar.calendar_schema import CalendarEventCreate, CalendarEventUpdate, \
     CalendarEvent as CalendarEventSchema, UserBookingUrlUpdate
-from app.models.calendar.bookinglink_model import BookingLink as BookingLinkModel
-from app.schemas.calendar.bookinglink_schema import BookingLinkCreate, BookingLink, EventRequest
-from app.models.calendar.brandingsettings_model import BrandingSettings as BrandingSettingsModel, BrandingSettings
-from app.schemas.calendar.brandsettings_schema import BrandingSettingsCreate, BrandingSettings as BrandingSettingsSchema
-from app.models.calendar.notificationsettings_model import NotificationSettings as NotificationSettingsModel
-from app.schemas.calendar.notification_schema import NotificationSettingsCreate, NotificationSettings
-from app.schemas.schemas import BusinessHoursSchema, TimeZoneUpdate
+from models.calendar.bookinglink_model import BookingLink as BookingLinkModel
+from schemas.calendar.bookinglink_schema import BookingLinkCreate, BookingLink, EventRequest
+from models.calendar.brandingsettings_model import BrandingSettings as BrandingSettingsModel, BrandingSettings
+from schemas.calendar.brandsettings_schema import BrandingSettingsCreate, BrandingSettings as BrandingSettingsSchema
+from models.calendar.notificationsettings_model import NotificationSettings as NotificationSettingsModel
+from schemas.calendar.notification_schema import NotificationSettingsCreate, NotificationSettings
+from schemas.schemas import BusinessHoursSchema, TimeZoneUpdate
 
 router = APIRouter()
 

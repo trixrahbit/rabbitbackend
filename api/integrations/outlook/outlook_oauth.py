@@ -6,14 +6,14 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from app.api.user.user_router import get_db
-from app.auth.auth_util import get_current_user
-from app.models import User
-from app.models.calendar.bookinglink_model import BookingLink
-from app.root.root_elements import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, AUTHORITY
+from api.user.user_router import get_db
+from auth.auth_util import get_current_user
+from models import User
+from models.calendar.bookinglink_model import BookingLink
+from root.root_elements import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, AUTHORITY
 import msal
 
-from app.schemas.calendar.bookinglink_schema import EventRequest
+from schemas.calendar.bookinglink_schema import EventRequest
 
 router = APIRouter()
 
@@ -31,7 +31,7 @@ def refresh_access_token_if_needed(user: User, db: Session):
     try:
         # Check if the token is about to expire within the next 5 minutes
         if user.outlook_token_expires_at is None or datetime.utcnow() > user.outlook_token_expires_at - timedelta(minutes=5):
-            result = msal_app.acquire_token_by_refresh_token(
+            result = msal_acquire_token_by_refresh_token(
                 user.outlook_refresh_token,
                 scopes=SCOPES
             )
@@ -54,7 +54,7 @@ def refresh_access_token_if_needed(user: User, db: Session):
 @router.get("/connect-to-outlook")
 async def connect_to_outlook(state: str):
     try:
-        auth_url = msal_app.get_authorization_request_url(
+        auth_url = msal_get_authorization_request_url(
             scopes=SCOPES,
             redirect_uri=REDIRECT_URI,
             response_type="code",
@@ -74,7 +74,7 @@ async def oauth_callback(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Authorization code or state not found")
 
     # Acquire tokens
-    result = msal_app.acquire_token_by_authorization_code(
+    result = msal_acquire_token_by_authorization_code(
         code,
         scopes=SCOPES,
         redirect_uri=REDIRECT_URI,

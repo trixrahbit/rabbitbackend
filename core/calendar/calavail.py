@@ -8,9 +8,9 @@ from fastapi import HTTPException
 from pytz import timezone
 import pytz
 
-from app.api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
-from app.models.models import BusinessHours, User
-from app.schemas.settings.sessions_schema import Session
+from api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
+from models.models import BusinessHours, User
+from schemas.settings.sessions_schema import Session
 
 
 def fetch_user_available_times(user: User, business_hours: List[BusinessHours], time_zone: str, db: Session, meeting_duration_minutes: int):

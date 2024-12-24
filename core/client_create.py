@@ -2,8 +2,8 @@ import logging
 
 from sqlalchemy.orm import Session
 
-from app.models.models import Client
-from app.schemas.schemas import ClientCreate
+from models.models import Client
+from schemas.schemas import ClientCreate
 
 
 def create_client(db: Session, client: ClientCreate, creator_id: int):

@@ -2,9 +2,9 @@ from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.api.user.user_router import get_db
-from app.models.subscription.subscription_model import SubscriptionPlan as SQLASubscriptionPlan, Subscription as SQLASubscription
-from app.schemas.subscription.subscription_schema import SubscriptionPlanCreate, SubscriptionCreate, SubscriptionPlan, Subscription
+from api.user.user_router import get_db
+from models.subscription.subscription_model import SubscriptionPlan as SQLASubscriptionPlan, Subscription as SQLASubscription
+from schemas.subscription.subscription_schema import SubscriptionPlanCreate, SubscriptionCreate, SubscriptionPlan, Subscription
 
 router = APIRouter()
 

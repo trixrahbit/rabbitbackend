@@ -3,9 +3,9 @@ from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from app.api.user.user_router import get_db
-from app.models.organizationModels.marketingAnalytics_model import MarketingAnalytics
-from app.schemas.organizations.marketingAnalytics_schema import MarketingAnalyticsSchema
+from api.user.user_router import get_db
+from models.organizationModels.marketingAnalytics_model import MarketingAnalytics
+from schemas.organizations.marketingAnalytics_schema import MarketingAnalyticsSchema
 
 router = APIRouter()
 
