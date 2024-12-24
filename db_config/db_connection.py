@@ -4,7 +4,9 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://postgres:312Bakersfield!@localhost/rabbitpsa"
+from root.root_elements import settings
+
+DATABASE_URL = settings.DATABASE_URL
 
 # SQLAlchemy specific
 engine = create_engine(DATABASE_URL)

@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     REDIRECT_URI: str
     AUTHORITY: str
     SCOPES: list
+    DB_Connection: str
 
 
 
@@ -25,3 +26,4 @@ CLIENT_SECRET = settings.CLIENT_SECRET
 REDIRECT_URI = settings.REDIRECT_URI
 AUTHORITY = settings.AUTHORITY
 SCOPES = settings.SCOPES
+DB_Connection = settings.DB_Connection
