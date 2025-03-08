@@ -1,12 +1,11 @@
 import logging
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import User
 from schemas.schemas import UserList
 from sqlalchemy.orm import joinedload
 
-router = APIRouter()
 
 @router.get("/organizations/{org_id}/users/{user_id}/profile", response_model=UserList)
 def read_user_profile(org_id: int, user_id: int, db: Session = Depends(get_db)):

@@ -1,5 +1,6 @@
 import logging
 import pyodbc
+from fastapi import APIRouter
 from pydantic_settings import BaseSettings
 
 # Config
@@ -26,3 +27,5 @@ REDIRECT_URI = settings.REDIRECT_URI
 AUTHORITY = settings.AUTHORITY
 SCOPES = settings.SCOPES
 DB_Connection = settings.DB_Connection
+
+router = APIRouter(prefix="/api")

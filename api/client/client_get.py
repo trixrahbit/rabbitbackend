@@ -4,11 +4,11 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import Client, Organization
 from schemas.schemas import ClientSchema
 
-router = APIRouter()
+
 
 
 # Existing endpoint for reading clients with pagination

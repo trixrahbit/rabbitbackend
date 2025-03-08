@@ -2,11 +2,10 @@ import logging
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import User
 from schemas.schemas import UserList
 from sqlalchemy.orm import joinedload
-router = APIRouter()
 
 
 @router.get("/organizations/{org_id}/users", response_model=List[UserList])

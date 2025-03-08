@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import Organization
 from schemas.organizations.accountReview_schema import AccountReviewSchema
 
-router = APIRouter()
+
 
 @router.get("/{client_id}/{org_id}/accountReview", response_model=List[AccountReviewSchema])
 async def get_account_review(client_id: int, org_id: int, db: Session = Depends(get_db)):

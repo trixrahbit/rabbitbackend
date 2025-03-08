@@ -5,8 +5,7 @@ from api.user.user_router import get_db
 from models.models import User
 from schemas.schemas import UserCreate
 
-router = APIRouter()
-
+router = APIRouter(prefix="/api")
 @router.post("/register")
 async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     if not user_data.agree_to_terms:

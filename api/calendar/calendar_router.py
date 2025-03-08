@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from core.calendar.calavail import fetch_user_available_times
 from models import User
 from models.calendar.calendar_model import CalendarEvent as CalendarEventModel
@@ -22,7 +22,7 @@ from models.calendar.notificationsettings_model import NotificationSettings as N
 from schemas.calendar.notification_schema import NotificationSettingsCreate, NotificationSettings
 from schemas.schemas import BusinessHoursSchema, TimeZoneUpdate
 
-router = APIRouter()
+
 
 # Events
 @router.post("/calendar-events/", response_model=CalendarEventSchema)

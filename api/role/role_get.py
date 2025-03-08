@@ -3,11 +3,10 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import Role, ClientRole
 from schemas.schemas import RoleSchema, RoleCreateSchema
 
-router = APIRouter()
 
 @router.get("/organizations/{org_id}/roles", response_model=List[RoleSchema])
 async def get_roles_for_organization(org_id: int, db: Session = Depends(get_db)):

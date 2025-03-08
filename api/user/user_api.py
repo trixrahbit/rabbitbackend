@@ -2,13 +2,12 @@ import logging
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
-from api.user.user_router import get_db
+from api.user.user_router import get_db, router
 from models.models import User, BusinessHours
 from schemas.schemas import UserList, UserUpdateSchema
 from sqlalchemy.orm import joinedload
 from passlib.context import CryptContext
 
-router = APIRouter()
 
 @router.get("/organizations/{org_id}/users", response_model=List[UserList])
 def read_users_for_organization(org_id: int, db: Session = Depends(get_db)):

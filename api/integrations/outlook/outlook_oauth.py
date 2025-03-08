@@ -10,12 +10,10 @@ from api.user.user_router import get_db
 from auth.auth_util import get_current_user
 from models import User
 from models.calendar.bookinglink_model import BookingLink
-from root.root_elements import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, AUTHORITY
+from root.root_elements import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, AUTHORITY, router
 import msal
 
 from schemas.calendar.bookinglink_schema import EventRequest
-
-router = APIRouter()
 
 # MSAL confidential client setup
 msal_app = msal.ConfidentialClientApplication(
@@ -23,6 +21,11 @@ msal_app = msal.ConfidentialClientApplication(
     authority=AUTHORITY,
     client_credential=CLIENT_SECRET,
 )
+
+
+def msal_acquire_token_by_refresh_token(scopes):
+    pass
+
 
 def refresh_access_token_if_needed(user: User, db: Session):
     if not user.outlook_access_token or not user.outlook_refresh_token:
@@ -32,7 +35,6 @@ def refresh_access_token_if_needed(user: User, db: Session):
         # Check if the token is about to expire within the next 5 minutes
         if user.outlook_token_expires_at is None or datetime.utcnow() > user.outlook_token_expires_at - timedelta(minutes=5):
             result = msal_acquire_token_by_refresh_token(
-                user.outlook_refresh_token,
                 scopes=SCOPES
             )
 
