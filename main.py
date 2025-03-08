@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-
 from api.checklists import checklist_router
 from api.calendar import calendar_router
 from api.integrations.outlook import outlook_oauth
@@ -9,7 +8,6 @@ from api.ticketing import ticket_router
 from api.projects import project_router
 from api.templates import template_router
 import logging
-
 from api.client import client_get, client_post
 from api.organizations import organizations_api
 from api.profile import user_profile
