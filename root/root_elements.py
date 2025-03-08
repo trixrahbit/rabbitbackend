@@ -13,7 +13,6 @@ class Settings(BaseSettings):
     GITHUB_SECRET_BACKEND: str
 
 
-
     class Config:
         env_file = "/var/www/.env"
 
