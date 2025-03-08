@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
 from models.organizationModels.event_model import Event
+from root.root_elements import router
 from schemas.organizations.event_schema import EventSchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/events", response_model=List[EventSchema])
 async def get_events(client_id: int, db: Session = Depends(get_db)):

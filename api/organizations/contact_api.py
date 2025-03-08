@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
+from root.root_elements import router
 from schemas.organizations.contact_schema import ContactSchema
 
-router = APIRouter()
 
 @router.get("/organizations/{org_id}/contact", response_model=ContactSchema)
 def get_contact(org_id: int, db: Session = Depends(get_db)):

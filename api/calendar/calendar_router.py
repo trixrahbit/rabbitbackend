@@ -7,11 +7,12 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from api.integrations.outlook.outlook_oauth import refresh_access_token_if_needed
-from api.user.user_router import get_db, router
+from api.user.user_router import get_db
 from core.calendar.calavail import fetch_user_available_times
 from models import User
 from models.calendar.calendar_model import CalendarEvent as CalendarEventModel
 from models.models import BusinessHours
+from root.root_elements import router
 from schemas.calendar.calendar_schema import CalendarEventCreate, CalendarEventUpdate, \
     CalendarEvent as CalendarEventSchema, UserBookingUrlUpdate
 from models.calendar.bookinglink_model import BookingLink as BookingLinkModel
