@@ -4,9 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.services_model import Service
+from root.root_elements import router
 from schemas.organizations.services_schema import ServiceSchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/services", response_model=List[ServiceSchema])
 async def get_services(client_id: int, db: Session = Depends(get_db)):

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from models.templates.templateModel import Template, TemplatePhase, TemplateTask, TemplateSprint, TemplateStory
+from root.root_elements import router
 from schemas.template import template_schema as schemas
 from api.user.user_router import get_db
 from schemas.template.template_schema import PhaseCreate, TaskCreate, StoryCreate, SprintCreate
@@ -11,7 +12,6 @@ from schemas.template.template_schema import PhaseCreate, TaskCreate, StoryCreat
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
 
 
 @router.get("/templates", response_model=List[schemas.Template])

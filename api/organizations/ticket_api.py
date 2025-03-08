@@ -4,9 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.ticket_model import Ticket
+from root.root_elements import router
 from schemas.organizations.ticket_schema import TicketSchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/tickets", response_model=List[TicketSchema])
 async def get_tickets(client_id: int, db: Session = Depends(get_db)):

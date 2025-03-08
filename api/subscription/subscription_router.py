@@ -4,9 +4,9 @@ from typing import List
 
 from api.user.user_router import get_db
 from models.subscription.subscription_model import SubscriptionPlan as SQLASubscriptionPlan, Subscription as SQLASubscription
+from root.root_elements import router
 from schemas.subscription.subscription_schema import SubscriptionPlanCreate, SubscriptionCreate, SubscriptionPlan, Subscription
 
-router = APIRouter()
 
 @router.post("/subscription-plans/", response_model=SubscriptionPlan)
 def create_subscription_plan(plan: SubscriptionPlanCreate, db: Session = Depends(get_db)):

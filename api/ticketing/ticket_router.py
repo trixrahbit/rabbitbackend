@@ -4,9 +4,9 @@ import logging
 from fastapi import APIRouter
 from typing import List
 
+from root.root_elements import router
 from schemas.organizations.ticket_schema import TicketSchema
 
-router = APIRouter()
 
 # Sample data for demonstration
 tickets = [

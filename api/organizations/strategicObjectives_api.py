@@ -4,9 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.strategicObjectives_model import StrategicObjective
+from root.root_elements import router
 from schemas.organizations.strategicObjectives_schema import StrategicObjectiveSchema
 
-router = APIRouter()
 
 
 @router.get("{client_id}/strategicObjectives", response_model=List[StrategicObjectiveSchema])

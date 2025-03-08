@@ -7,9 +7,9 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
+from root.root_elements import router
 from schemas.schemas import OrganizationSchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/organizations/", response_model=List[OrganizationSchema])
 async def read_organizations(client_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):

@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter()
 
 # @router.get("/{client_id}/leads", response_model=List[Lead])
 # def get_leads(client_id: int, db: Session = Depends(get_db)):

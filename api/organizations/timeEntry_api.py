@@ -5,9 +5,9 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.timeentry_model import TimeEntry
+from root.root_elements import router
 from schemas.organizations.timeEntry_schema import TimeEntrySchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/timeEntries", response_model=List[TimeEntrySchema])
 async def get_timeEntries(client_id: int, db: Session = Depends(get_db)):

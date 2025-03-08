@@ -4,9 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.project_model import Project
+from root.root_elements import router
 from schemas.organizations.project_schema import ProjectSchema
 
-router = APIRouter()
 
 @router.get("/{client_id}/projects", response_model=List[ProjectSchema])
 def get_projects(client_id: int, db: Session = Depends(get_db)):

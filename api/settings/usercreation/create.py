@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from auth.auth_util import hash_password
 from api.user.user_router import get_db
 from models.models import User
+from root.root_elements import router
 from schemas.schemas import UserCreate
 
-router = APIRouter(prefix="/api")
 @router.post("/register")
 async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     if not user_data.agree_to_terms:

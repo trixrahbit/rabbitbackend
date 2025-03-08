@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter()
 
 
 # @router.get("/{client_id}}/{organization_id}/locations", response_model=List[Location])

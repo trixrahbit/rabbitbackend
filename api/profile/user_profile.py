@@ -1,8 +1,9 @@
 import logging
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db, router
+from api.user.user_router import get_db
 from models.models import User
+from root.root_elements import router
 from schemas.schemas import UserList
 from sqlalchemy.orm import joinedload
 

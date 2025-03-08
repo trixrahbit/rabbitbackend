@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from models.projects.projects_model import Project, Phase, Task, Sprint, Story
+from root.root_elements import router
 from schemas.project import project as schemas
 from api.user.user_router import get_db
 import logging
 
-router = APIRouter()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

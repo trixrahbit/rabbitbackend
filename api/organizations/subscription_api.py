@@ -4,9 +4,9 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.subscription_model import Subscription
+from root.root_elements import router
 from schemas.organizations.subscription_schema import SubscriptionSchema
 
-router = APIRouter()
 
 
 @router.get("{client_id}/subscriptions", response_model=List[SubscriptionSchema])
