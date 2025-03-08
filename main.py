@@ -53,5 +53,3 @@ app.include_router(calendar_router.router)
 app.include_router(outlook_oauth.router)
 
 app.include_router(user_api.router)
-
-
