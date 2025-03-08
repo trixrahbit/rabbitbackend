@@ -20,11 +20,11 @@ from api.user import user_get, user_router, user_api
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "https://app.webitservices.com"],  # Allows only requests from localhost:3000
+    allow_origins=["http://localhost:3000", "https://app.webitservices.com"],  # Allows only requests from localhost:3000
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
