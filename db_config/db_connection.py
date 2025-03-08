@@ -1,24 +1,17 @@
-# database/db_connection.py
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-import urllib
+from sqlalchemy import create_engine, MetaData
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine.url import URL
+import pyodbc
 from root.root_elements import settings
 
-# Convert DB_Connection string for SQLAlchemy compatibility
-params = urllib.parse.quote_plus(settings.DB_Connection)
-DATABASE_URL = f"mssql+pyodbc:///?odbc_connect={params}"
+DATABASE_URL = settings.DB_Connection
 
-# Create SQLAlchemy async engine
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=True,  # Set to False in production
-    fast_executemany=True
-)
+# ✅ Use "pyodbc" with proper MSSQL support
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
-# Session factory
-SessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
-)
+metadata = MetaData()
+Base = declarative_base(metadata=metadata)
 
-# Declarative base
-Base = declarative_base()
+# ✅ Use synchronous session for SQLAlchemy operations
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
