@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
 
     class Config:
-        env_file = "/var/www/.env"
+        env_file = "/etc/backend.env"
 
 # Instantiate settings
 settings = Settings()
