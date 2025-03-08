@@ -6,8 +6,9 @@ from starlette import status
 from jose import jwt, JWTError
 from api.user.user_router import get_db
 from models.models import User
+from root.root_elements import settings
 
-SECRET_KEY = "YOUR_SECRET_KEY"  # Use a strong secret key
+SECRET_KEY = settings.OAUTH_KEY  # Use a strong secret key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

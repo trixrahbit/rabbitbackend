@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     SCOPES: list
     DB_Connection: str
     GITHUB_SECRET_BACKEND: str
+    OAUTH_KEY: str
 
 
     class Config:
