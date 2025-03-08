@@ -20,8 +20,6 @@ class Settings(BaseSettings):
 # Instantiate settings
 settings = Settings()
 
-
-
 CLIENT_ID = settings.CLIENT_ID
 CLIENT_SECRET = settings.CLIENT_SECRET
 REDIRECT_URI = settings.REDIRECT_URI
