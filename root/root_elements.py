@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
 
     class Config:
-        env_file = ".env"
+        env_file = "/var/www/.env"
 
 # Instantiate settings
 settings = Settings()
