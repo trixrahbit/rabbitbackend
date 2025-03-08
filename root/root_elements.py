@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     AUTHORITY: str
     SCOPES: list
     DB_Connection: str
+    GITHUB_SECRET_BACKEND: str
 
 
 
