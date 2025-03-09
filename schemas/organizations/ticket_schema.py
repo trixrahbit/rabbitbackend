@@ -4,6 +4,8 @@ from pydantic import BaseModel, constr, EmailStr
 
 
 class TicketSchema(BaseModel):
+    id: int
+    title: str
     subject: str
     description: str
     status: str
