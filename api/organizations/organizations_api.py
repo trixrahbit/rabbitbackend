@@ -17,7 +17,12 @@ async def read_organizations(client_id: int, db: Session = Depends(get_db)):
     """Fetch organizations for a given client_id."""
     logger.info(f"Fetching organizations for client_id: {client_id}")
 
-    organizations = db.query(Organization).filter(Organization.client_id == client_id).all()
+    organizations = (
+        db.query(Organization)
+        .filter(Organization.client_id == client_id)
+        .order_by(Organization.id.asc())  # 🔥 Explicit ORDER BY to fix MSSQL issue
+        .all()
+    )
 
     if not organizations:
         logger.warning(f"No organizations found for client_id {client_id}")
