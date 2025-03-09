@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     DB_Connection: str
     GITHUB_SECRET_BACKEND: str
     OAUTH_KEY: str
+    GITHUB_SECRET_FRONTEND: str
 
 
     class Config:
