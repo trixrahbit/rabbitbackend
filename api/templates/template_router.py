@@ -321,9 +321,9 @@ def delete_template(template_id: int, db: Session = Depends(get_db)):
 
 @router.get("/template/phases", response_model=List[schemas.Phase])
 def read_template_phases(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    phases = db.query(TemplatePhase).offset(skip).limit(limit).all()
-    logger.info(f"Retrieved {len(phases)} phases")
+    phases = db.query(TemplatePhase).order_by(TemplatePhase.id).offset(skip).limit(limit).all()
     return phases
+
 
 
 @router.get("/template/phases/{phase_id}", response_model=schemas.Phase)
@@ -349,9 +349,9 @@ def create_template_phase(phase: PhaseCreate, db: Session = Depends(get_db)):
 
 @router.get("/template/tasks", response_model=List[schemas.Task])
 def read_template_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    tasks = db.query(TemplateTask).offset(skip).limit(limit).all()
-    logger.info(f"Retrieved {len(tasks)} tasks")
+    tasks = db.query(TemplateTask).order_by(TemplateTask.id).offset(skip).limit(limit).all()
     return tasks
+
 
 
 @router.get("/template/tasks/{task_id}", response_model=schemas.Task)
@@ -377,9 +377,9 @@ def create_template_task(task: TaskCreate, db: Session = Depends(get_db)):
 
 @router.get("/template/sprints", response_model=List[schemas.Sprint])
 def read_template_sprints(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    sprints = db.query(TemplateSprint).offset(skip).limit(limit).all()
-    logger.info(f"Retrieved {len(sprints)} sprints")
+    sprints = db.query(TemplateSprint).order_by(TemplateSprint.id).offset(skip).limit(limit).all()
     return sprints
+
 
 
 @router.get("/template/sprints/{sprint_id}", response_model=schemas.Sprint)
@@ -405,9 +405,9 @@ def create_template_sprint(sprint: SprintCreate, db: Session = Depends(get_db)):
 
 @router.get("/template/stories", response_model=List[schemas.Story])
 def read_template_stories(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    stories = db.query(TemplateStory).offset(skip).limit(limit).all()
-    logger.info(f"Retrieved {len(stories)} stories")
+    stories = db.query(TemplateStory).order_by(TemplateStory.id).offset(skip).limit(limit).all()
     return stories
+
 
 
 @router.get("/template/stories/{story_id}", response_model=schemas.Story)
