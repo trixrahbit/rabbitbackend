@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 @router.get("/templates", response_model=List[schemas.Template])
 def read_templates(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    templates = db.query(Template).order_by(Template.id).offset(skip).limit(limit).all()
+    templates = db.query(Template).order_by(Template.id.asc()).offset(skip).limit(limit).all()
     return templates
 
 
