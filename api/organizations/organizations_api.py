@@ -11,13 +11,13 @@ from root.root_elements import router
 from schemas.schemas import OrganizationSchema
 
 
-@router.get("/{client_id}/organizations/", response_model=List[OrganizationSchema])
+@router.get("/{client_id}/organizations", response_model=List[OrganizationSchema])
 async def read_organizations(client_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     logging.info(f"Fetching organizations for client_id: {client_id}")
     organizations = db.query(Organization).filter(Organization.client_id == client_id).offset(skip).limit(limit).all()
     return organizations
 
-@router.post("/{client_id}/organizations/", response_model=OrganizationSchema)
+@router.post("/{client_id}/organizations", response_model=OrganizationSchema)
 async def create_organization(client_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
     logging.info(f"Received organization data for client_id {client_id}: {jsonable_encoder(organization)}")
     try:
@@ -31,7 +31,7 @@ async def create_organization(client_id: int, organization: OrganizationSchema, 
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.patch("/{client_id}/organizations/{organization_id}/", response_model=OrganizationSchema)
+@router.patch("/{client_id}/organizations/{organization_id}", response_model=OrganizationSchema)
 async def update_organization(client_id: int, organization_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
     db_organization = db.query(Organization).filter(Organization.id == organization_id, Organization.client_id == client_id).first()
     if db_organization is None:
@@ -43,7 +43,7 @@ async def update_organization(client_id: int, organization_id: int, organization
     db.refresh(db_organization)
     return db_organization
 
-@router.delete("/{client_id}/organizations/{organization_id}/", response_model=OrganizationSchema)
+@router.delete("/{client_id}/organizations/{organization_id}", response_model=OrganizationSchema)
 async def delete_organization(client_id: int, organization_id: int, db: Session = Depends(get_db)):
     db_organization = db.query(Organization).filter(Organization.id == organization_id, Organization.client_id == client_id).first()
     if db_organization is None:
