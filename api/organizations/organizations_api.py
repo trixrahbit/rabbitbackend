@@ -14,20 +14,14 @@ logger = logging.getLogger(__name__)
 
 @router.get("/{client_id}/organizations", response_model=List[OrganizationSchema])
 async def read_organizations(client_id: int, db: Session = Depends(get_db)):
-    """Fetch organizations for a given client_id."""
-    logger.info(f"Fetching organizations for client_id: {client_id}")
-
     organizations = (
         db.query(Organization)
         .filter(Organization.client_id == client_id)
-        .order_by(Organization.id.asc())  # 🔥 Explicit ORDER BY to fix MSSQL issue
-        .all()
+        .order_by(Organization.id.asc())  # 🔥 Ensures MSSQL does not require OFFSET
+        .all()  # ⚠️ Ensure this is `.all()` and NOT `.offset(...).limit(...)`
     )
-
-    if not organizations:
-        logger.warning(f"No organizations found for client_id {client_id}")
-
     return organizations
+
 
 
 @router.post("/{client_id}/organizations", response_model=OrganizationSchema)
