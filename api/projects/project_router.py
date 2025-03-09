@@ -101,9 +101,10 @@ def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)
 
 
 @router.get("/projects/", response_model=List[schemas.Project])
-def read_projects(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    projects = db.query(Project).offset(skip).limit(limit).all()
+def read_projects(db: Session = Depends(get_db)):
+    projects = db.query(Project).all()  # Return all projects
     return projects
+
 
 @router.get("/projects/{project_id}", response_model=schemas.Project)
 def read_project(project_id: int, db: Session = Depends(get_db)):
@@ -112,9 +113,10 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/phases/", response_model=List[schemas.Phase])
-def read_phases(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    phases = db.query(Phase).offset(skip).limit(limit).all()
+def read_phases(db: Session = Depends(get_db)):
+    phases = db.query(Phase).all()
     return phases
+
 
 @router.get("/phases/{phase_id}", response_model=schemas.Phase)
 def read_phase(phase_id: int, db: Session = Depends(get_db)):
@@ -142,9 +144,10 @@ def update_phase(phase_id: int, phase: schemas.PhaseUpdate, db: Session = Depend
 
 
 @router.get("/tasks/", response_model=List[schemas.Task])
-def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    tasks = db.query(Task).offset(skip).limit(limit).all()
+def read_tasks(db: Session = Depends(get_db)):
+    tasks = db.query(Task).all()
     return tasks
+
 
 @router.get("/tasks/{task_id}", response_model=schemas.Task)
 def read_task(task_id: int, db: Session = Depends(get_db)):
@@ -174,9 +177,10 @@ def update_task(task_id: int, task: schemas.TaskUpdate, db: Session = Depends(ge
 
 
 @router.get("/sprints/", response_model=List[schemas.Sprint])
-def read_sprints(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    sprints = db.query(Sprint).offset(skip).limit(limit).all()
+def read_sprints(db: Session = Depends(get_db)):
+    sprints = db.query(Sprint).all()
     return sprints
+
 
 @router.get("/sprints/{sprint_id}", response_model=schemas.Sprint)
 def read_sprint(sprint_id: int, db: Session = Depends(get_db)):
@@ -205,9 +209,10 @@ def update_sprint(sprint_id: int, sprint: schemas.SprintUpdate, db: Session = De
 
 
 @router.get("/stories/", response_model=List[schemas.Story])
-def read_stories(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    stories = db.query(Story).offset(skip).limit(limit).all()
+def read_stories(db: Session = Depends(get_db)):
+    stories = db.query(Story).all()
     return stories
+
 
 @router.get("/stories/{story_id}", response_model=schemas.Story)
 def read_story(story_id: int, db: Session = Depends(get_db)):
