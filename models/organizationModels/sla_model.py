@@ -27,18 +27,14 @@ class Impact(Base):
 
 class SLACondition(Base):
     __tablename__ = 'sla_conditions'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    sla_policy_id = Column(Integer, ForeignKey('sla_policies.id'), nullable=False)
-    priority_id = Column(Integer, ForeignKey('priorities.id'), nullable=False)
-    impact_id = Column(Integer, ForeignKey('impacts.id'), nullable=False)
-    response_time = Column(Integer, nullable=False)  # Time in hours/minutes
-    resolution_time = Column(Integer, nullable=False)  # Time in hours/minutes
+    id = Column(Integer, primary_key=True)
+    sla_policy_id = Column(Integer, ForeignKey('sla_policies.id'))
+    priority_id = Column(Integer, ForeignKey('priorities.id'))
+    impact_id = Column(Integer, ForeignKey('impacts.id'))
+    response_time = Column(Integer)  # Time in hours/minutes
+    resolution_time = Column(Integer)  # Time in hours/minutes
 
     # Relationships
     sla_policy = relationship("SLA", backref="conditions")
     priority = relationship("Priority", backref="sla_conditions")
     impact = relationship("Impact", backref="sla_conditions")
-
-    # Ensure these exist in related models
-    tickets = relationship("Ticket", back_populates="sla_condition", cascade="all, delete-orphan")

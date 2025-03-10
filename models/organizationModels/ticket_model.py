@@ -25,9 +25,7 @@ class Ticket(Base):
     due_date = Column(DateTime, nullable=True)
     last_activity_date = Column(DateTime, nullable=True)
 
-    # SLA and Queue
-    sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
-    queue_id = Column(Integer, ForeignKey('queues.id'), nullable=True)
+
 
     # Foreign Keys
     company_id = Column(Integer, ForeignKey('companies.id'), nullable=False)
@@ -35,6 +33,10 @@ class Ticket(Base):
     billing_agreement_id = Column(Integer, ForeignKey('billing_agreements.id'), nullable=True)
     contact_id = Column(Integer, ForeignKey('contacts.id'), nullable=True)
     contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=True)
+
+    # SLA and Queue
+    sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
+    queue_id = Column(Integer, ForeignKey('queues.id'), nullable=True)
 
     # SLA compliance tracking
     service_level_agreement_met = Column(Boolean, nullable=False, default=False)
@@ -45,7 +47,7 @@ class Ticket(Base):
     ticket_category = Column(Integer, nullable=True)
 
     # Relationships
-    sla_condition = relationship("SLAConditions", back_populates="tickets")
+    sla_condition = relationship("SLACondition", back_populates="tickets")
     billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     organization = relationship("Organization", back_populates="tickets")
     contact = relationship("Contact", back_populates="tickets")
