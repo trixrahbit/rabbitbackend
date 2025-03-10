@@ -34,11 +34,11 @@ class BillingAgreementItem(Base):
 
     # Relationships
     billing_agreement = relationship("BillingAgreement", back_populates="billing_agreement_items")
-    invoices = relationship("Invoice", back_populates="billing_agreement_item")
-    payments = relationship("Payment", back_populates="billing_agreement_item")
-    project = relationship("Project", back_populates="billing_agreement_item")
-    asset = relationship("Asset", back_populates="billing_agreement_item")
-    service = relationship("Service", back_populates="billing_agreement_item")
+    # invoices = relationship("Invoice", back_populates="billing_agreement_item")
+    # payments = relationship("Payment", back_populates="billing_agreement_item")
+    # project = relationship("Project", back_populates="billing_agreement_item")
+    # asset = relationship("Asset", back_populates="billing_agreement_item")
+    # service = relationship("Service", back_populates="billing_agreement_item")
 
 
 
