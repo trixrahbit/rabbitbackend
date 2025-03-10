@@ -18,6 +18,7 @@ class SubscriptionPlan(Base):
 
     subscriptions = relationship("Subscription", back_populates="plan")
 
+
 class Subscription(Base):
     __tablename__ = "subscriptions"
 
@@ -31,3 +32,4 @@ class Subscription(Base):
     updated_at = Column(Date, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     plan = relationship("SubscriptionPlan", back_populates="subscriptions")
+    client = relationship("Client", back_populates="subscriptions")  # ✅ Fix: Add back-reference
