@@ -132,19 +132,6 @@ class ClientRole(Base):
     role_id = Column(Integer, ForeignKey('roles.id'))
 
 
-class Contact(Base):
-    __tablename__ = 'contacts'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String)
-    phone = Column(String)
-    organization_id = Column(Integer, ForeignKey('organizations.id'))
-
-    # ✅ Relationship
-    organization = relationship('Organization', back_populates='contacts')
-
-
 class BusinessHours(Base):
     __tablename__ = 'business_hours'
 
