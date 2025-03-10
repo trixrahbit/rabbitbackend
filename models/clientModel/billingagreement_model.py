@@ -19,7 +19,7 @@ class BillingAgreement(Base):
     client = relationship("Client", back_populates="billing_agreements")
     tickets = relationship("Ticket", back_populates="billing_agreement")
     billing_agreement_items = relationship("BillingAgreementItem", back_populates="billing_agreement")
-    sla_condition = relationship("SLACondition", back_populates="billing_agreements")
+    sla_condition = relationship("SLACondition", back_populates="billing_agreements", lazy="joined")
 
 
 
