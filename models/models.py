@@ -6,6 +6,7 @@ from datetime import datetime
 
 from models import Base
 from models.subscription.subscription_model import Subscription
+from models.clientModel.billingagreement_model import BillingAgreement
 
 # ✅ Association table for users and roles (Many-to-Many)
 user_roles = Table(
