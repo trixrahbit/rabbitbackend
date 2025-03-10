@@ -32,7 +32,7 @@ class Client(Base):
     type = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)
-    description = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
     logo = Column(String, nullable=True)
     website = Column(String, nullable=True)
     revenue = Column(String, nullable=True)
@@ -40,38 +40,38 @@ class Client(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
+    # ✅ Relationships
     billing_agreements = relationship("BillingAgreement", back_populates="client")
-    subscriptions = relationship("Subscription", back_populates="client", cascade="all, delete-orphan")
     organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
-    users = relationship('User', back_populates='client', foreign_keys='User.client_id')
-    projects = relationship('Project', back_populates='client', cascade="all, delete-orphan")  # ✅ Fix: Add relationship
+    contacts = relationship('Contact', back_populates='client', cascade="all, delete-orphan")
 
 
+### **🔹 Organization Model (Subscription belongs to Organization)**
 class Organization(Base):
     __tablename__ = 'organizations'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True)
-    domain = Column(String, unique=True)
-    phone = Column(String)
+    name = Column(String, unique=True, nullable=False)
+    domain = Column(String, unique=True, nullable=True)
+    phone = Column(String, nullable=True)
     creator_id = Column(Integer, ForeignKey('users.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
-    type = Column(String)
-    industry = Column(String)
-    size = Column(String)
-    description = Column(Text)
-    logo = Column(String)
-    website = Column(String)
-    revenue = Column(String)
-    founded = Column(String)
+    type = Column(String, nullable=True)
+    industry = Column(String, nullable=True)
+    size = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
+    logo = Column(String, nullable=True)
+    website = Column(String, nullable=True)
+    revenue = Column(String, nullable=True)
+    founded = Column(String, nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # ✅ Relationships
     client = relationship('Client', back_populates='organizations')
-    users = relationship("User", back_populates="organization", foreign_keys="[User.organization_id]")
-    contacts = relationship('Contact', back_populates='organization')
+    users = relationship("User", back_populates="organization", cascade="all, delete-orphan")
     subscriptions = relationship("Subscription", back_populates="organization")
+
 
 
 class User(Base):
