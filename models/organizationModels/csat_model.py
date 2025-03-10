@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func, Numeric
 from sqlalchemy.orm import relationship
 
-from db_config.db_connection import Base
+from models import Base
+
 
 class Survey(Base):
     __tablename__ = 'surveys'
