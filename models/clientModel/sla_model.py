@@ -5,6 +5,7 @@ from models import Base
 
 class SLACondition(Base):
     __tablename__ = 'sla_conditions'
+
     id = Column(Integer, primary_key=True)
     sla_policy_id = Column(Integer, ForeignKey('sla_policies.id'))
     priority_id = Column(Integer, ForeignKey('priorities.id'))
@@ -12,15 +13,11 @@ class SLACondition(Base):
     response_time = Column(Integer)
     resolution_time = Column(Integer)
 
-    # Relationships
-    sla_policy = relationship("SLA", backref="conditions")
-    priority = relationship("Priority", backref="sla_conditions")
-    impact = relationship("Impact", backref="sla_conditions")
-
-    # ✅ Fix: Add relationship to Ticket
+    sla_policy = relationship("SLA", back_populates="conditions")
+    priority = relationship("Priority", back_populates="sla_conditions")
+    impact = relationship("Impact", back_populates="sla_conditions")
+    billing_agreements = relationship("BillingAgreement", back_populates="sla_condition")
     tickets = relationship("Ticket", back_populates="sla_condition")
-
-    billing_agreement = relationship("BillingAgreement", back_populates="sla_condition")
 
 class SLA(Base):
     __tablename__ = 'sla_policies'
