@@ -13,8 +13,6 @@ class Survey(Base):
     response_rate = Column(Numeric)
 
     organization_id = Column(Integer, ForeignKey('organizations.id'))
-
-    # Relationships
     organization = relationship("Organization", back_populates="surveys")
     responses = relationship("SurveyResponse", back_populates="survey")
 
