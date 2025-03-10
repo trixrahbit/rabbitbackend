@@ -100,7 +100,6 @@ class User(Base):
     roles = relationship('Role', secondary=user_roles, back_populates='users')
 
     # ✅ Relationships
-    client = relationship('Client', back_populates='users', foreign_keys=[client_id])
     organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied
     business_hours = relationship('BusinessHours', back_populates='user')
 
