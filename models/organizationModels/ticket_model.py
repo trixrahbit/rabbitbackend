@@ -47,9 +47,9 @@ class Ticket(Base):
     ticket_category = Column(Integer, nullable=True)
 
     # Relationships
-    sla_condition = relationship("SLACondition", backref="tickets", lazy="joined")
+
     billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     organization = relationship("Organization", back_populates="tickets")
     contact = relationship("Contact", back_populates="tickets")
     survey_responses = relationship("SurveyResponse", back_populates="ticket")
-
+    sla_condition = relationship("SLACondition", backref="tickets", lazy="joined")
