@@ -23,7 +23,7 @@ class Subscription(Base):
     __tablename__ = "subscriptions"
 
     id = Column(Integer, primary_key=True, index=True)
-    organization_id = Column(Integer, ForeignKey("organizations.id"))  # ✅ Belongs to Organization, Not Client
+    organization_id = Column(Integer, ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False)  # ✅ Fixed: Ensuring Foreign Key Constraint
     plan_id = Column(Integer, ForeignKey("subscription_plans.id"))
     start_date = Column(Date, nullable=False)
     end_date = Column(Date)
@@ -32,5 +32,5 @@ class Subscription(Base):
     updated_at = Column(Date, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # ✅ Relationships
-    organization = relationship("Organization", back_populates="subscriptions")
+    organization = relationship("Organization", back_populates="subscriptions", foreign_keys=[organization_id])  # ✅ Explicit Foreign Key
     plan = relationship("SubscriptionPlan", back_populates="subscriptions")

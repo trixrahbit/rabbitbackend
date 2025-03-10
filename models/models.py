@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship  # Ensure correct import path
 from datetime import datetime
 
 from models import Base
+from models.subscription.subscription_model import Subscription
 
 # ✅ Association table for users and roles (Many-to-Many)
 user_roles = Table(
@@ -70,7 +71,7 @@ class Organization(Base):
     # ✅ Relationships
     client = relationship('Client', back_populates='organizations')
     users = relationship("User", back_populates="organization", cascade="all, delete-orphan", foreign_keys="[User.organization_id]")
-    subscriptions = relationship("Subscription", back_populates="organization")
+    subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan", foreign_keys=[Subscription.organization_id])
 
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
