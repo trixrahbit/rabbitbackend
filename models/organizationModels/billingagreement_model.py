@@ -19,8 +19,6 @@ class BillingAgreement(Base):
     # Relationships
     organization = relationship("Organization", back_populates="billing_agreements")
     sla_condition = relationship("SLACondition", back_populates="billing_agreements")
-
-    # 🚀 Change Ticket Relationship to a String
     tickets = relationship("Ticket", back_populates="billing_agreement")
 
 
