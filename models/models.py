@@ -70,6 +70,7 @@ class Organization(Base):
     founded = Column(String, nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    super_admin = Column(Boolean, default=False)
 
     # ✅ Relationships
     clients = relationship("Client", back_populates="organization", cascade="all, delete-orphan")

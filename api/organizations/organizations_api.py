@@ -4,7 +4,8 @@ from typing import List
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
-from models.models import Organization
+from auth.auth_util import get_current_user
+from models.models import Organization, User
 from root.root_elements import router
 from schemas.schemas import OrganizationSchema
 
@@ -12,12 +13,19 @@ from schemas.schemas import OrganizationSchema
 logger = logging.getLogger(__name__)
 
 
-@router.get("/organizations/{org_id}", response_model=OrganizationSchema)
-async def get_organization(org_id: int, db: Session = Depends(get_db)):
-    organization = db.query(Organization).filter(Organization.org_id == org_id).first()
-    if organization is None:
-        raise HTTPException(status_code=404, detail="Organization not found")
-    return organization
+@router.get("/organizations", response_model=List[OrganizationSchema])
+async def get_organizations(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Fetch organizations based on user role."""
+
+    if current_user.is_superuser:
+        # Super Admin: See all organizations
+        organizations = db.query(Organization).all()
+    else:
+        # Regular User: See only their organization
+        organizations = db.query(Organization).filter(Organization.id == current_user.organization_id).all()
+
+    return organizations
+
 
 @router.patch("/organizations/{org_id}", response_model=OrganizationSchema)
 async def update_organization(org_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
