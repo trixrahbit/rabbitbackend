@@ -21,4 +21,4 @@ class Contact(Base):
     survey_responses = relationship("SurveyResponse", back_populates="contact")
 
     tickets = relationship("Ticket", back_populates="contact")
-    leads = relationship("Lead", back_populates="contact")
+    # leads = relationship("Lead", back_populates="contact")
