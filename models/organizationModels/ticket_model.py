@@ -27,8 +27,7 @@ class Ticket(Base):
     last_activity_date = Column(DateTime, nullable=True)
 
     # Foreign Keys
-    company_id = Column(Integer, ForeignKey('companies.id'), nullable=False)
-    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True)
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)  # ✅ Fix: Attach to Client
     billing_agreement_id = Column(Integer, ForeignKey('billing_agreements.id'), nullable=True)
     contact_id = Column(Integer, ForeignKey('contacts.id'), nullable=True)
     contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=True)
@@ -45,8 +44,9 @@ class Ticket(Base):
     ticket_type = Column(Integer, nullable=True)
     ticket_category = Column(Integer, nullable=True)
 
-    # 🚀 Fix Relationship for BillingAgreement (Use a String Reference)
-    billing_agreement = relationship("BillingAgreement", back_populates="tickets", lazy="joined")
-    organization = relationship("Organization", back_populates="tickets")
+    # ✅ Fix Relationship for BillingAgreement
+    billing_agreement = relationship("BillingAgreement", back_populates="tickets")
+    client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
     contact = relationship("Contact", back_populates="tickets")
     sla_condition = relationship("SLACondition", back_populates="tickets")
+

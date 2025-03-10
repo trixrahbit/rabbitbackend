@@ -45,6 +45,7 @@ class Client(Base):
     billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
     contacts = relationship('Contact', back_populates='client', cascade="all, delete-orphan")
     organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
+    tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")  # ✅ Fix: Add tickets
 
 
 # 🔹 **Organization Model (Owns Subscriptions & Users)**
