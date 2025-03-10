@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from api.user.user_router import get_db
 from auth.auth_util import create_access_token, verify_password
-from models.models import User, Client
+from models.models import User, Client, Organization
 from root.root_elements import router
 
 
@@ -22,7 +22,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
 
     # Fetch the client object using client_id from the user
-    client = db.query(Client).filter(Client.id == user.client_id).first() if user.client_id else None
+    organization = db.query(Organization).filter(Organization.id == user.organization_id).first() if user.organization_id else None
 
     access_token = create_access_token(data={"sub": user.email})
     logging.info(f"User {user.email} logged in successfully with token {access_token}")
@@ -33,8 +33,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         "name": user.name,
         "email": user.email,
         "organization": {
-            "id": client.id if client else None,
-            "name": client.name if client else "No Organization",
+            "id": organization.id if organization else None,
+            "name": organization.name if organization else "No Organization",
         }
     }
     return {"access_token": access_token, "token_type": "bearer", "user": user_info}
