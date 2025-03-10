@@ -1,9 +1,10 @@
 from sqlalchemy import (
     Column, Integer, String, ForeignKey, Boolean, Table, Date, func, Text, Time, DateTime
 )
-from sqlalchemy.orm import relationship
-from db_config.db_connection import Base  # Ensure correct import path
+from sqlalchemy.orm import relationship  # Ensure correct import path
 from datetime import datetime
+
+from models import Base
 
 # ✅ Association table for users and roles (Many-to-Many)
 user_roles = Table(
