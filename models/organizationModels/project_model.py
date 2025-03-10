@@ -10,24 +10,27 @@ class ProjectStatus(enum.Enum):
     COMPLETED = "Completed"
     ON_HOLD = "On Hold"
 
+
 class Project(Base):
     __tablename__ = 'projects'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    description = Column(Text, nullable=True)
-    start_date = Column(DateTime, default=func.now(), nullable=False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    description = Column(Text)
+    start_date = Column(DateTime, default=func.now())
     end_date = Column(DateTime, nullable=True)
-    status = Column(Enum(ProjectStatus), nullable=False, default=ProjectStatus.IN_PROGRESS)
+    status = Column(String, nullable=False, default="In Progress")  # Example statuses: In Progress, Completed
 
-    # Foreign Keys
-    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)  # ✅ Fix: Add ForeignKey
+    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True)
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
     billing_agreement_id = Column(Integer, ForeignKey('billing_agreements.id'), nullable=True)
 
-    # Relationships
-    tasks = relationship("Task", back_populates="project", cascade="all, delete-orphan")
+    # ✅ Relationships
+    client = relationship("Client", back_populates="projects")  # ✅ Fix: Add relationship
     organization = relationship("Organization", back_populates="projects")
     sla_condition = relationship("SLACondition", back_populates="projects")
     billing_agreements = relationship("BillingAgreement", back_populates="project")
     assets = relationship("Asset", back_populates="project")
+
+    tasks = relationship("Task", back_populates="project", cascade="all, delete-orphan")
