@@ -69,7 +69,7 @@ class Organization(Base):
 
     # ✅ Relationships
     client = relationship('Client', back_populates='organizations')
-    users = relationship('User', back_populates='organization')
+    users = relationship("User", back_populates="organization", foreign_keys="[User.organization_id]")
     contacts = relationship('Contact', back_populates='organization')
 
 
@@ -100,7 +100,7 @@ class User(Base):
 
     # ✅ Relationships
     client = relationship('Client', back_populates='users', foreign_keys=[client_id])
-    organization = relationship('Organization', back_populates='users', foreign_keys=[organization_id])
+    organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied
     business_hours = relationship('BusinessHours', back_populates='user')
 
 
