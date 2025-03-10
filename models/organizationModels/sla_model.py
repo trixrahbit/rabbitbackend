@@ -33,10 +33,14 @@ class SLACondition(Base):
     sla_policy_id = Column(Integer, ForeignKey('sla_policies.id'))
     priority_id = Column(Integer, ForeignKey('priorities.id'))
     impact_id = Column(Integer, ForeignKey('impacts.id'))
-    response_time = Column(Integer)  # Time in hours/minutes
-    resolution_time = Column(Integer)  # Time in hours/minutes
+    response_time = Column(Integer)
+    resolution_time = Column(Integer)
 
     # Relationships
     sla_policy = relationship("SLA", backref="conditions")
     priority = relationship("Priority", backref="sla_conditions")
     impact = relationship("Impact", backref="sla_conditions")
+
+    # ✅ Fix: Add relationship to Ticket
+    tickets = relationship("Ticket", back_populates="sla_condition")
+
