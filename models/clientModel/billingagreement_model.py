@@ -40,6 +40,3 @@ class BillingAgreementItem(Base):
     # project = relationship("Project", back_populates="billing_agreement_item")
     # asset = relationship("Asset", back_populates="billing_agreement_item")
     # service = relationship("Service", back_populates="billing_agreement_item")
-
-
-
