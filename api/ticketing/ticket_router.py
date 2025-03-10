@@ -1,9 +1,9 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from api.user.user_router import get_db
-from models.organizationModels.ticket_model import Ticket
+from models.clientModel.ticket_model import Ticket
 from root.root_elements import router
 from schemas.organizations.ticket_schema import TicketSchema, TicketUpdate, TicketCreate
 

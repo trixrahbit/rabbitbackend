@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
-from models.organizationModels.sla_model import SLA
+from models.clientModel.sla_model import SLA
 from root.root_elements import router
 from schemas.organizations.sla_schema import SLASchema
 

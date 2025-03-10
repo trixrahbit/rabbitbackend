@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
-from models.organizationModels.marketingAnalytics_model import MarketingAnalytics
+from models.clientModel.marketingAnalytics_model import MarketingAnalytics
 from root.root_elements import router
 from schemas.organizations.marketingAnalytics_schema import MarketingAnalyticsSchema
 

@@ -30,6 +30,7 @@ class Client(Base):
     domain = Column(String, unique=True, nullable=True)
     phone = Column(String, nullable=True)
     creator_id = Column(Integer, ForeignKey('users.id'))
+    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # ✅ Clients belong to an Org
     type = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)
@@ -42,10 +43,11 @@ class Client(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # ✅ Relationships
+    organization = relationship("Organization", back_populates="clients")
     billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
-    contacts = relationship('Contact', back_populates='client', cascade="all, delete-orphan")
-    organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
-    tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")  # ✅ Fix: Add tickets
+    contacts = relationship("Contact", back_populates="client", cascade="all, delete-orphan")
+    tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")
+
 
 
 # 🔹 **Organization Model (Owns Subscriptions & Users)**
@@ -57,7 +59,6 @@ class Organization(Base):
     domain = Column(String, unique=True, nullable=True)
     phone = Column(String, nullable=True)
     creator_id = Column(Integer, ForeignKey('users.id'))
-    client_id = Column(Integer, ForeignKey('clients.id'))  # ✅ Linked to Client
     type = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)
@@ -70,10 +71,11 @@ class Organization(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # ✅ Relationships
-    client = relationship('Client', back_populates='organizations')
-    users = relationship("User", back_populates="organization", cascade="all, delete-orphan", foreign_keys="[User.organization_id]")
-    subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan", foreign_keys=[Subscription.organization_id])
+    clients = relationship("Client", back_populates="organization", cascade="all, delete-orphan")
+    users = relationship("User", back_populates="organization", cascade="all, delete-orphan")
+    subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan")
     surveys = relationship("Survey", back_populates="organization", cascade="all, delete-orphan")
+
 
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
@@ -87,7 +89,7 @@ class User(Base):
     mobile = Column(String)
     location = Column(String)
     hashed_password = Column(String)
-    organization_id = Column(Integer, ForeignKey('organizations.id'))  # ✅ Belongs to Organization, not Client
+    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # ✅ Users belong to an Org
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
@@ -102,7 +104,7 @@ class User(Base):
     roles = relationship('Role', secondary=user_roles, back_populates='users')
 
     # ✅ Relationships
-    organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied
+    organization = relationship("Organization", back_populates="users")
     business_hours = relationship('BusinessHours', back_populates='user')
 
 

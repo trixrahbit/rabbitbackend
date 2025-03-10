@@ -13,51 +13,71 @@ from schemas.schemas import ClientSchema
 
 
 # Existing endpoint for reading clients with pagination
-@router.get("/clients/", response_model=List[ClientSchema])
-async def read_clients(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    clients = db.query(Client).offset(skip).limit(limit).all()
-    return clients
+@router.get("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
+async def get_client_by_id(org_id: int, client_id: int, db: Session = Depends(get_db)):
+    client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return client
+
 
 
 # New endpoint to return all clients in JSON format without pagination
-@router.get("/get_clients", response_model=List[ClientSchema])
-async def get_clients(db: Session = Depends(get_db)):
-    clients = db.query(Client).all()
+@router.get("/organizations/{org_id}/clients", response_model=List[ClientSchema])
+async def get_clients(org_id: int, db: Session = Depends(get_db)):
+    clients = db.query(Client).filter(Client.organization_id == org_id).all()
     return clients
 
 
 # Endpoint to get client ID based on client name
-@router.get("/clients/{client_name}/id")
-async def get_client_id(client_name: str, db: Session = Depends(get_db)):
-    client = db.query(Client).filter(Client.name == client_name).first()
+@router.get("/{org_id}/clients/{client_name}", response_model=ClientSchema)
+async def get_client_id(org_id: int, client_name: str, db: Session = Depends(get_db)):
+    client = db.query(Client).filter(Client.client_name == client_name).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
-    return {"client_id": client.id}
+    return client
+
+@router.post("/organizations/{org_id}/clients", response_model=ClientSchema)
+async def create_client(org_id: int, client: ClientSchema, db: Session = Depends(get_db)):
+    db_client = Client(**client.dict(), organization_id=org_id)
+    db.add(db_client)
+    db.commit()
+    db.refresh(db_client)
+    return db_client
+
+@router.delete("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
+async def delete_client(org_id: int, client_id: int, db: Session = Depends(get_db)):
+    client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    db.delete(client)
+    db.commit()
+    return client
 
 
-# Endpoint to get organization stats for a client
-@router.get("/{client_id}/stats")
-async def get_organization_stats(client_id: int, db: Session = Depends(get_db)):
-    current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    last_month_start = (current_month_start - timedelta(days=1)).replace(day=1, hour=0, minute=0, second=0,
-                                                                         microsecond=0)
+@router.patch("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
+async def update_client(org_id: int, client_id: int, client: ClientSchema, db: Session = Depends(get_db)):
+    db_client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
+    if not db_client:
+        raise HTTPException(status_code=404, detail="Client not found")
 
-    current_count = db.query(Organization).filter(Organization.client_id == client_id,
-                                                  Organization.created_at >= current_month_start).count()
-    last_month_count = db.query(Organization).filter(Organization.client_id == client_id,
-                                                     Organization.created_at < current_month_start,
-                                                     Organization.created_at >= last_month_start).count()
+    update_data = client.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_client, key, value)
 
-    if last_month_count == 0:
-        if current_count > 0:
-            percentage_change = 100  # Arbitrary large value to indicate significant increase from 0
-        else:
-            percentage_change = 0  # No change if there are no organizations this month either
-    else:
-        percentage_change = ((current_count - last_month_count) / last_month_count) * 100
+    db.commit()
+    db.refresh(db_client)
+    return db_client
 
-    # Logging for debugging
-    logging.info(
-        f"Current count: {current_count}, Last month count: {last_month_count}, Percentage change: {percentage_change}%")
 
-    return {"currentCount": current_count, "lastMonthCount": last_month_count, "percentageChange": percentage_change}
+
+#Endpoint to get client stats
+@router.get("/{org_id}/clients/{client_id}/stats", response_model=ClientSchema)
+async def get_client_stats(org_id: int, client_id: int, db: Session = Depends(get_db)):
+    client = db.query(Client).filter(Client.id == client_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return client
+
+

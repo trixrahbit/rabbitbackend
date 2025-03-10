@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import Depends
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
-from models.organizationModels.timeentry_model import TimeEntry
+from models.clientModel.timeentry_model import TimeEntry
 from root.root_elements import router
 from schemas.organizations.timeEntry_schema import TimeEntrySchema
 
