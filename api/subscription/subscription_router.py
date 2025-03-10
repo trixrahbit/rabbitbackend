@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from api.user.user_router import get_db
+from models.models import Organization
 from models.subscription.subscription_model import SubscriptionPlan as SQLASubscriptionPlan, Subscription as SQLASubscription
 from root.root_elements import router
 from schemas.subscription.subscription_schema import SubscriptionPlanCreate, SubscriptionCreate, SubscriptionPlan, Subscription
@@ -26,5 +27,10 @@ def create_subscription(subscription: SubscriptionCreate, db: Session = Depends(
 
 @router.get("/clients/{client_id}/subscriptions", response_model=List[Subscription])
 def get_client_subscriptions(client_id: int, db: Session = Depends(get_db)):
-    subscriptions = db.query(SQLASubscription).filter(SQLASubscription.client_id == client_id).all()
+    subscriptions = (
+        db.query(SQLASubscription)
+        .join(Organization)
+        .filter(Organization.client_id == client_id)
+        .all()
+    )
     return subscriptions  # FastAPI will convert this list of SQLAlchemy models to a list of Pydantic models
