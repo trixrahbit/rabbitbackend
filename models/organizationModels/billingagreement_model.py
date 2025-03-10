@@ -16,13 +16,8 @@ class BillingAgreement(Base):
     status = Column(String, nullable=True)
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
 
-    # ✅ Relationship to Client
     client = relationship("Client", back_populates="billing_agreements")
-
-
-    # Relationships
-    sla_condition = relationship("SLACondition", back_populates="billing_agreements")
-
+    sla_condition = relationship("SLACondition")
     tickets = relationship("Ticket", back_populates="billing_agreement")
 
 
