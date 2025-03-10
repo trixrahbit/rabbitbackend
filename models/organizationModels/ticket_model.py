@@ -44,6 +44,8 @@ class Ticket(Base):
     ticket_type = Column(Integer, nullable=True)
     ticket_category = Column(Integer, nullable=True)
 
+    survey_id = Column(Integer, ForeignKey('survey_responses.id'), nullable=True)
+
     # ✅ Fix Relationship for BillingAgreement
     billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
