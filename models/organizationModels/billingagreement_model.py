@@ -34,7 +34,6 @@ class BillingAgreementItem(Base):
 
     # Relationships
     billing_agreement = relationship("BillingAgreement", back_populates="billing_agreement_items")
-    tickets = relationship("Ticket", back_populates="billing_agreement_item")
     invoices = relationship("Invoice", back_populates="billing_agreement_item")
     payments = relationship("Payment", back_populates="billing_agreement_item")
     project = relationship("Project", back_populates="billing_agreement_item")
