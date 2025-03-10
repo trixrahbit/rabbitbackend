@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Boolean, func
 from sqlalchemy.orm import relationship
-from db_config.db_connection import Base
-from models import Base
+from db_config.db_connection import Base  # Ensure this is imported once
 
 class Ticket(Base):
     __tablename__ = 'tickets'
@@ -25,8 +24,6 @@ class Ticket(Base):
     due_date = Column(DateTime, nullable=True)
     last_activity_date = Column(DateTime, nullable=True)
 
-
-
     # Foreign Keys
     company_id = Column(Integer, ForeignKey('companies.id'), nullable=False)
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True)
@@ -46,10 +43,8 @@ class Ticket(Base):
     ticket_type = Column(Integer, nullable=True)
     ticket_category = Column(Integer, nullable=True)
 
-    # Relationships
-
-    billing_agreement = relationship("BillingAgreement", backref="tickets", lazy="joined")
+    # 🚀 Fix Relationship for BillingAgreement (Use a String Reference)
+    billing_agreement = relationship("BillingAgreement", back_populates="tickets", lazy="joined")
     organization = relationship("Organization", back_populates="tickets")
     contact = relationship("Contact", back_populates="tickets")
-    survey_responses = relationship("SurveyResponse", backref="tickets", lazy="joined")
-    sla_condition = relationship("SLACondition", backref="tickets", lazy="joined")
+    sla_condition = relationship("SLACondition", back_populates="tickets")
