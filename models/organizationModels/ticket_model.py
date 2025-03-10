@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Boolean, func
 from sqlalchemy.orm import relationship
-from db_config.db_connection import Base  # Ensure this is imported once
+
+from models import Base
+
 
 class Ticket(Base):
     __tablename__ = 'tickets'
