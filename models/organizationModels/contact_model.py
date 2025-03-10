@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 
 from models import Base
 
-
 class Contact(Base):
     __tablename__ = 'contacts'
 
@@ -17,7 +16,9 @@ class Contact(Base):
 
     # ✅ Relationship to Client
     client = relationship("Client", back_populates="contacts")
+
+    # ✅ Fix: Ensure SurveyResponse is fully defined before referencing it
     survey_responses = relationship("SurveyResponse", back_populates="contact")
+
     tickets = relationship("Ticket", back_populates="contact")
     leads = relationship("Lead", back_populates="contact")
-
