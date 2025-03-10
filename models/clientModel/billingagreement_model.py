@@ -17,9 +17,10 @@ class BillingAgreement(Base):
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
 
     client = relationship("Client", back_populates="billing_agreements")
-    sla_condition = relationship("SLACondition")
     tickets = relationship("Ticket", back_populates="billing_agreement")
     billing_agreement_items = relationship("BillingAgreementItem", back_populates="billing_agreement")
+    sla_condition = relationship("SLACondition")
+
 
 
 class BillingAgreementItem(Base):
