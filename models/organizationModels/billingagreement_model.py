@@ -12,13 +12,16 @@ class BillingAgreement(Base):
     description = Column(Text, nullable=True)
     start_date = Column(DateTime, default=func.now())
     end_date = Column(DateTime, nullable=True)
-    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True)
-    status = Column(String, nullable=False, default="Active")
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)  # ✅ Fix: Link to Client
+    status = Column(String, nullable=True)
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
 
+    # ✅ Fix: Relationship to Client instead of Organization
+    client = relationship("Client", back_populates="billing_agreements")
+
     # Relationships
-    organization = relationship("Organization", back_populates="billing_agreements")
     sla_condition = relationship("SLACondition", back_populates="billing_agreements")
+
     tickets = relationship("Ticket", back_populates="billing_agreement")
 
 

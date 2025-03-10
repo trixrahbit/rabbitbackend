@@ -22,13 +22,13 @@ role_permissions = Table(
 
 
 class Client(Base):
-    __tablename__ = "clients"
+    __tablename__ = 'clients'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
-    domain = Column(String, unique=True)
+    domain = Column(String, unique=True, nullable=True)
     phone = Column(String, nullable=True)
-    creator_id = Column(Integer, ForeignKey("users.id"))
+    creator_id = Column(Integer, ForeignKey('users.id'))
     type = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)
@@ -37,10 +37,10 @@ class Client(Base):
     website = Column(String, nullable=True)
     revenue = Column(String, nullable=True)
     founded = Column(String, nullable=True)
-    created_at = Column(Date, default=datetime.utcnow)
-    updated_at = Column(Date, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
-    # ✅ Fix: Add relationship to Subscription
+    billing_agreements = relationship("BillingAgreement", back_populates="client")
     subscriptions = relationship("Subscription", back_populates="client", cascade="all, delete-orphan")
     organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
     users = relationship('User', back_populates='client', foreign_keys='User.client_id')
@@ -71,6 +71,7 @@ class Organization(Base):
     client = relationship('Client', back_populates='organizations')
     users = relationship("User", back_populates="organization", foreign_keys="[User.organization_id]")
     contacts = relationship('Contact', back_populates='organization')
+    subscriptions = relationship("Subscription", back_populates="organization")
 
 
 class User(Base):
