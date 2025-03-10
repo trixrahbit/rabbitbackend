@@ -49,4 +49,4 @@ class Ticket(Base):
     client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
     contact = relationship("Contact", back_populates="tickets")
     sla_condition = relationship("SLACondition", back_populates="tickets")
-    survey_responses = relationship("SurveyResponse", back_populates="ticket")
+    survey_responses = relationship("SurveyResponse", back_populates="tickets")
