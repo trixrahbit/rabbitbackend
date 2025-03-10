@@ -73,6 +73,7 @@ class Organization(Base):
     client = relationship('Client', back_populates='organizations')
     users = relationship("User", back_populates="organization", cascade="all, delete-orphan", foreign_keys="[User.organization_id]")
     subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan", foreign_keys=[Subscription.organization_id])
+    surveys = relationship("Survey", back_populates="organization", cascade="all, delete-orphan")
 
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
