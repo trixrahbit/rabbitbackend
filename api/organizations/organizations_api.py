@@ -12,14 +12,14 @@ from schemas.schemas import OrganizationSchema
 logger = logging.getLogger(__name__)
 
 
-@router.get("/{org_id}", response_model=OrganizationSchema)
+@router.get("/organizations/{org_id}", response_model=OrganizationSchema)
 async def get_organization(org_id: int, db: Session = Depends(get_db)):
     organization = db.query(Organization).filter(Organization.org_id == org_id).first()
     if organization is None:
         raise HTTPException(status_code=404, detail="Organization not found")
     return organization
 
-@router.patch("/{org_id}", response_model=OrganizationSchema)
+@router.patch("/organizations/{org_id}", response_model=OrganizationSchema)
 async def update_organization(org_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
     db_organization = db.query(Organization).filter(Organization.org_id == org_id).first()
     if db_organization is None:
@@ -31,7 +31,7 @@ async def update_organization(org_id: int, organization: OrganizationSchema, db:
     db.refresh(db_organization)
     return db_organization
 
-@router.delete("/{org_id}", response_model=OrganizationSchema)
+@router.delete("/organizations/{org_id}", response_model=OrganizationSchema)
 async def delete_organization(org_id: int, db: Session = Depends(get_db)):
     organization = db.query(Organization).filter(Organization.org_id == org_id).first()
     if organization is None:
@@ -40,7 +40,7 @@ async def delete_organization(org_id: int, db: Session = Depends(get_db)):
     db.commit()
     return organization
 
-@router.post("/{org_id}", response_model=OrganizationSchema)
+@router.post("/organizations/{org_id}", response_model=OrganizationSchema)
 async def create_organization(org_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
     organization = Organization(**organization.dict())
     db.add(organization)
