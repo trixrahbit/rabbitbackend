@@ -44,11 +44,16 @@ class Ticket(Base):
     ticket_type = Column(Integer, nullable=True)
     ticket_category = Column(Integer, nullable=True)
 
-    survey_id = Column(Integer, ForeignKey('survey_responses.id'), nullable=True)
+    # ✅ Fix Relationship for SurveyResponse
+    survey_responses = relationship(
+        "SurveyResponse",
+        back_populates="ticket",
+        foreign_keys="[SurveyResponse.ticket_id]"  # ✅ Explicitly define which FK to use
+    )
 
     # ✅ Fix Relationship for BillingAgreement
     billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
     contact = relationship("Contact", back_populates="tickets")
     sla_condition = relationship("SLACondition", back_populates="tickets")
-    survey_responses = relationship("SurveyResponse", back_populates="tickets")
+
