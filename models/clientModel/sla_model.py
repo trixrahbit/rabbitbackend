@@ -44,3 +44,5 @@ class SLACondition(Base):
     # ✅ Fix: Add relationship to Ticket
     tickets = relationship("Ticket", back_populates="sla_condition")
 
+    billing_agreement = relationship("BillingAgreement", back_populates="sla_condition")
+
