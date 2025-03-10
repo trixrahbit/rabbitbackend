@@ -84,7 +84,6 @@ class User(Base):
     mobile = Column(String)
     location = Column(String)
     hashed_password = Column(String)
-    client_id = Column(Integer, ForeignKey('clients.id'))
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
