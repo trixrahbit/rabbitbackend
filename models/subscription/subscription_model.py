@@ -23,7 +23,7 @@ class Subscription(Base):
     __tablename__ = "subscriptions"
 
     id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey("clients.id"))
+    organization_id = Column(Integer, ForeignKey("organizations.id"))  # ✅ Belongs to Organization, Not Client
     plan_id = Column(Integer, ForeignKey("subscription_plans.id"))
     start_date = Column(Date, nullable=False)
     end_date = Column(Date)
@@ -31,5 +31,6 @@ class Subscription(Base):
     created_at = Column(Date, default=datetime.utcnow)
     updated_at = Column(Date, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    plan = relationship("SubscriptionPlan", back_populates="subscriptions")
+    # ✅ Relationships
     organization = relationship("Organization", back_populates="subscriptions")
+    plan = relationship("SubscriptionPlan", back_populates="subscriptions")
