@@ -41,12 +41,12 @@ class Client(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # ✅ Relationships
-    billing_agreements = relationship("BillingAgreement", back_populates="client")
-    organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
+    billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
     contacts = relationship('Contact', back_populates='client', cascade="all, delete-orphan")
+    organizations = relationship('Organization', back_populates='client', cascade="all, delete-orphan")
 
 
-### **🔹 Organization Model (Subscription belongs to Organization)**
+# 🔹 **Organization Model (Owns Subscriptions & Users)**
 class Organization(Base):
     __tablename__ = 'organizations'
 
@@ -55,7 +55,7 @@ class Organization(Base):
     domain = Column(String, unique=True, nullable=True)
     phone = Column(String, nullable=True)
     creator_id = Column(Integer, ForeignKey('users.id'))
-    client_id = Column(Integer, ForeignKey('clients.id'))
+    client_id = Column(Integer, ForeignKey('clients.id'))  # ✅ Linked to Client
     type = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)
@@ -69,11 +69,11 @@ class Organization(Base):
 
     # ✅ Relationships
     client = relationship('Client', back_populates='organizations')
-    users = relationship("User", back_populates="organization", cascade="all, delete-orphan")
+    users = relationship("User", back_populates="organization", cascade="all, delete-orphan", foreign_keys="[User.organization_id]")
     subscriptions = relationship("Subscription", back_populates="organization")
 
 
-
+# 🔹 **User Model (Belongs to Organization, Not Client)**
 class User(Base):
     __tablename__ = 'users'
 
@@ -84,7 +84,7 @@ class User(Base):
     mobile = Column(String)
     location = Column(String)
     hashed_password = Column(String)
-    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    organization_id = Column(Integer, ForeignKey('organizations.id'))  # ✅ Belongs to Organization, not Client
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
