@@ -19,12 +19,6 @@ Checklist.task = relationship("Task", back_populates="checklist", uselist=False)
 Story.checklist = relationship("Checklist", uselist=False, back_populates="story")
 Checklist.story = relationship("Story", uselist=False, back_populates="checklist")
 
-#Relationship between Client and Subscription
-from models.subscription.subscription_model import Subscription
-Client.subscriptions = relationship("Subscription", back_populates="client")
-Subscription.client = relationship("Client", back_populates="subscriptions")
-
-
 #Relationship between User and Calendar
 from models.calendar.calendar_model import CalendarEvent
 
