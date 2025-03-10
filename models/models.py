@@ -22,35 +22,6 @@ role_permissions = Table(
     Column('permission_id', Integer, ForeignKey('permissions.id', ondelete="CASCADE"), primary_key=True)
 )
 
-
-class Client(Base):
-    __tablename__ = 'clients'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
-    domain = Column(String, unique=True, nullable=True)
-    phone = Column(String, nullable=True)
-    creator_id = Column(Integer, ForeignKey('users.id'))
-    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # ✅ Clients belong to an Org
-    type = Column(String, nullable=True)
-    industry = Column(String, nullable=True)
-    size = Column(String, nullable=True)
-    description = Column(Text, nullable=True)
-    logo = Column(String, nullable=True)
-    website = Column(String, nullable=True)
-    revenue = Column(String, nullable=True)
-    founded = Column(String, nullable=True)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-
-    # ✅ Relationships
-    organization = relationship("Organization", back_populates="clients")
-    billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
-    contacts = relationship("Contact", back_populates="client", cascade="all, delete-orphan")
-    tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")
-
-
-
 # 🔹 **Organization Model (Owns Subscriptions & Users)**
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -78,6 +49,32 @@ class Organization(Base):
     subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan")
     surveys = relationship("Survey", back_populates="organization", cascade="all, delete-orphan")
 
+
+class Client(Base):
+    __tablename__ = 'clients'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    domain = Column(String, unique=True, nullable=True)
+    phone = Column(String, nullable=True)
+    creator_id = Column(Integer, ForeignKey('users.id'))
+    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # ✅ Clients belong to an Org
+    type = Column(String, nullable=True)
+    industry = Column(String, nullable=True)
+    size = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
+    logo = Column(String, nullable=True)
+    website = Column(String, nullable=True)
+    revenue = Column(String, nullable=True)
+    founded = Column(String, nullable=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    # ✅ Relationships
+    organization = relationship("Organization", back_populates="clients")
+    contacts = relationship("Contact", back_populates="client", cascade="all, delete-orphan")
+    tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")
+    billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
 
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
