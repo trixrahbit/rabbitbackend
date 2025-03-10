@@ -56,6 +56,7 @@ BrandingSettings.client = relationship("Client", back_populates="branding_settin
 from models.base import Base  # ✅ Ensure Base is imported first
 from models.clientModel.sla_model import SLA, SLACondition, Priority, Impact
 from models.clientModel.billingagreement_model import BillingAgreement, BillingAgreementItem
+from models.clientModel.ticket_model import Ticket
 from models.models import Client
 from models.models import Organization
 from models.models  import User
