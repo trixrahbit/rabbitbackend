@@ -28,6 +28,7 @@ class ClientCreate(BaseModel):
     email: str
     phone: str
     creator_id: int
+    organization_id: int
 
 
 class OrganizationSchema(BaseModel):
@@ -56,6 +57,7 @@ class UserCreate(BaseModel):
     organization_id: int
     creator_id: Optional[int] = None
     type: Optional[str] = None
+    organization_id: int
 
     # Use Config to define model behavior with SQLAlchemy if needed
     class Config:
