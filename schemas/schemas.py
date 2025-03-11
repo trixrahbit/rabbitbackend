@@ -2,7 +2,6 @@ from typing import Optional, List
 
 from pydantic import BaseModel, constr, EmailStr, validator
 
-
 class ClientSchema(BaseModel):
     id: int
     name: str
@@ -20,7 +19,7 @@ class ClientSchema(BaseModel):
     founded: Optional[str] = None
 
     class Config:
-        from_attributes = True
+        from_attributes = True  # ✅ Ensures correct ORM conversion
 
 
 class ClientCreate(BaseModel):
