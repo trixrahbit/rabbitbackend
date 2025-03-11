@@ -8,7 +8,7 @@ from api.ticketing import ticket_router
 from api.projects import project_router
 from api.templates import template_router
 import logging
-from api.client import client_get, client_post
+from api.client import client_get
 from api.organizations import organizations_api
 from api.profile import user_profile
 from api.role import role_get
@@ -34,7 +34,7 @@ app.add_middleware(
 app.include_router(ticket_router.router)
 app.include_router(user_router.router)
 app.include_router(client_get.router)
-app.include_router(client_post.router)
+
 app.include_router(role_get.router)
 app.include_router(create.router)
 app.include_router(login.router)

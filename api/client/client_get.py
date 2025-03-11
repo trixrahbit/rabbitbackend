@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Client, Organization
 from root.root_elements import router
-from schemas.schemas import ClientSchema  # Ensure schema exists
+from schemas.schemas import ClientSchema, ClientCreate  # Ensure schema exists
 
 
 # 🔹 Get a client by ID under a specific organization
@@ -34,8 +34,13 @@ async def get_client_by_name(org_id: int, client_name: str, db: Session = Depend
 
 # 🔹 Create a new client under an organization
 @router.post("/organizations/{org_id}/clients", response_model=ClientSchema)
-async def create_client(org_id: int, client: ClientSchema, db: Session = Depends(get_db)):
-    new_client = Client(**client.model_dump(), organization_id=org_id)  # ✅ Use model_dump() for Pydantic v2
+async def create_client(org_id: int, client: ClientCreate, db: Session = Depends(get_db)):
+    new_client = Client(
+        name=client.name,
+        phone=client.phone,
+        creator_id=client.creator_id,  # ✅ Include creator_id if available
+        organization_id=org_id  # ✅ Use org_id from the URL
+    )
     db.add(new_client)
     db.commit()
     db.refresh(new_client)
