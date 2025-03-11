@@ -11,7 +11,7 @@ from schemas.subscription.subscription_schema import SubscriptionPlanCreate, Sub
 
 @router.get("/organizations/{client_id}/subscriptions", response_model=List[Subscription])
 async def read_subscriptions(client_id: int, db: Session = Depends(get_db)):
-    subscriptions = db.query(Organization).filter(Organization.client_id == client_id).first().subscriptions
+    subscriptions = db.query(Organization).filter(Organization.clients_id == client_id).first().subscriptions
     return subscriptions
 
 
@@ -25,7 +25,7 @@ async def create_subscription(client_id: int, subscription: SubscriptionCreate, 
 
 @router.delete("/organizations/{client_id}/subscriptions/{subscription_id}", response_model=Subscription)
 async def delete_subscription(client_id: int, subscription_id: int, db: Session = Depends(get_db)):
-    subscription = db.query(Organization).filter(Organization.client_id == client_id).first().subscriptions.filter(SQLASubscription.id == subscription_id).first()
+    subscription = db.query(Organization).filter(Organization.clients_id == client_id).first().subscriptions.filter(SQLASubscription.id == subscription_id).first()
     db.delete(subscription)
     db.commit()
     return subscription
