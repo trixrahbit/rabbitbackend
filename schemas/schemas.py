@@ -25,7 +25,7 @@ class ClientSchema(BaseModel):
 
 class ClientCreate(BaseModel):
     name: str
-    email: EmailStr
+    domain: str
     phone: str
     creator_id: int
     organization_id: int

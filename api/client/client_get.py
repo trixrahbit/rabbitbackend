@@ -39,6 +39,7 @@ async def create_client(org_id: int, client: ClientCreate, db: Session = Depends
     new_client = Client(
         name=client.name,
         phone=client.phone,
+        domain=client.domain,
         creator_id=client.creator_id,  # ✅ Include creator_id if available
         organization_id=org_id  # ✅ Use org_id from the URL
     )
