@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.organizationModels.subscription_model import Subscription
 from root.root_elements import router
-from schemas.organizations.subscription_schema import SubscriptionSchema
+from schemas.client.subscription_schema import SubscriptionSchema
 
 
 

@@ -6,7 +6,7 @@ from api.user.user_router import get_db
 from models.models import Organization
 from models.clientModel.event_model import Event
 from root.root_elements import router
-from schemas.organizations.event_schema import EventSchema
+from schemas.client.event_schema import EventSchema
 
 
 @router.get("/{client_id}/events", response_model=List[EventSchema])

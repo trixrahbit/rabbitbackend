@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.kbArticle_model import KnowledgeBaseArticle
 from root.root_elements import router
-from schemas.organizations.kbArticle_schema import KbArticleSchema
+from schemas.client.kbArticle_schema import KbArticleSchema
 
 
 

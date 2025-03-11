@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.ticket_model import Ticket
 from root.root_elements import router
-from schemas.organizations.ticket_schema import TicketSchema
+from schemas.client.ticket_schema import TicketSchema
 
 
 @router.get("/{client_id}/tickets", response_model=List[TicketSchema])

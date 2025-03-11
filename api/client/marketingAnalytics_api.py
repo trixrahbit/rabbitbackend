@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.marketingAnalytics_model import MarketingAnalytics
 from root.root_elements import router
-from schemas.organizations.marketingAnalytics_schema import MarketingAnalyticsSchema
+from schemas.client.marketingAnalytics_schema import MarketingAnalyticsSchema
 
 
 

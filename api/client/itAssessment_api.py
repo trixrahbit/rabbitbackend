@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
 from root.root_elements import router
-from schemas.organizations.itAssessment_schema import ItAssessmentSchema
+from schemas.client.itAssessment_schema import ItAssessmentSchema
 
 
 @router.get("/{client_id}/itAssessment", response_model=List[ItAssessmentSchema])

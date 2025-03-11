@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.task_model import Task
 from root.root_elements import router
-from schemas.organizations.task_schema import TaskSchema
+from schemas.client.task_schema import TaskSchema
 
 
 

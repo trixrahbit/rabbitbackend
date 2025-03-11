@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.project_model import Project
 from root.root_elements import router
-from schemas.organizations.project_schema import ProjectSchema
+from schemas.client.project_schema import ProjectSchema
 
 
 @router.get("/{client_id}/projects", response_model=List[ProjectSchema])

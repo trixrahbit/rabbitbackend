@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.strategicObjectives_model import StrategicObjective
 from root.root_elements import router
-from schemas.organizations.strategicObjectives_schema import StrategicObjectiveSchema
+from schemas.client.strategicObjectives_schema import StrategicObjectiveSchema
 
 
 

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
 from root.root_elements import router
-from schemas.organizations.accountReview_schema import AccountReviewSchema
+from schemas.client.accountReview_schema import AccountReviewSchema
 
 
 

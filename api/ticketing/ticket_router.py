@@ -5,7 +5,7 @@ from typing import List
 from api.user.user_router import get_db
 from models.clientModel.ticket_model import Ticket
 from root.root_elements import router
-from schemas.organizations.ticket_schema import TicketSchema, TicketUpdate, TicketCreate
+from schemas.client.ticket_schema import TicketSchema, TicketUpdate, TicketCreate
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

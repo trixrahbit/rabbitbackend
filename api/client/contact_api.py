@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
 from api.user.user_router import get_db
 from models.models import Organization, Contact
 from root.root_elements import router
-from schemas.organizations.contact_schema import ContactSchema, ContactCreate, ContactUpdate
+from schemas.client.contact_schema import ContactSchema, ContactCreate, ContactUpdate
 from typing import List
 
 # GET ALL CONTACTS FOR AN ORGANIZATION

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.sla_model import SLA
 from root.root_elements import router
-from schemas.organizations.sla_schema import SLASchema
+from schemas.client.sla_schema import SLASchema
 
 
 @router.get("/{client_id}/sla", response_model=List[SLASchema])

@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Organization
-from schemas.organizations.billingAgreement_schema import BillingAgreementSchema
+from schemas.client.billingAgreement_schema import BillingAgreementSchema
 
 router = APIRouter()
 

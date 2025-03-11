@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.timeentry_model import TimeEntry
 from root.root_elements import router
-from schemas.organizations.timeEntry_schema import TimeEntrySchema
+from schemas.client.timeEntry_schema import TimeEntrySchema
 
 
 @router.get("/{client_id}/timeEntries", response_model=List[TimeEntrySchema])

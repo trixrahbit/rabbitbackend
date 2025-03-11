@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.clientModel.services_model import Service
 from root.root_elements import router
-from schemas.organizations.services_schema import ServiceSchema
+from schemas.client.services_schema import ServiceSchema
 
 
 @router.get("/{client_id}/services", response_model=List[ServiceSchema])

@@ -6,7 +6,7 @@ from api.user.user_router import get_db
 from models.models import Organization
 from models.clientModel.incident_model import IncidentReport
 from root.root_elements import router
-from schemas.organizations.incident_schema import IncidentSchema
+from schemas.client.incident_schema import IncidentSchema
 
 
 

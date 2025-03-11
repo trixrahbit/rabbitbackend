@@ -9,6 +9,7 @@ class ClientSchema(BaseModel):
     domain: str
     phone: Optional[str] = None
     creator_id: Optional[int] = None
+    organization_id: int
     type: Optional[str] = None
     industry: Optional[str] = None
     size: Optional[str] = None
@@ -34,7 +35,6 @@ class OrganizationSchema(BaseModel):
     domain: str
     phone: Optional[str] = None
     creator_id: Optional[int] = None
-    client_id: Optional[int] = None
     type: Optional[str] = None
     industry: Optional[str] = None
     size: Optional[str] = None
@@ -53,6 +53,9 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: constr(min_length=7)
     agree_to_terms: bool
+    organization_id: int
+    creator_id: Optional[int] = None
+    type: Optional[str] = None
 
     # Use Config to define model behavior with SQLAlchemy if needed
     class Config:
