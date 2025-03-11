@@ -49,7 +49,7 @@ class Organization(Base):
 
     # ✅ Relationships
     clients = relationship("Client", back_populates="organization", cascade="all, delete-orphan")
-    users = relationship("User", back_populates="organization", cascade="all, delete-orphan")
+    users = relationship("User", back_populates="organization", foreign_keys="[User.organization_id]")
     subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan")
     surveys = relationship("Survey", back_populates="organization", cascade="all, delete-orphan")
 
@@ -105,9 +105,7 @@ class User(Base):
 
     # ✅ Many-to-Many relationship with roles
     roles = relationship('Role', secondary=user_roles, back_populates='users')
-
-    # ✅ Relationships
-    organization = relationship("Organization", back_populates="users")
+    organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied
     business_hours = relationship('BusinessHours', back_populates='user')
 
 
