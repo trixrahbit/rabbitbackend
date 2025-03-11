@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from auth.auth_util import get_current_user
 from models.models import Organization, User
+from models.organizationModels.orgModel import OrganizationType, Industry, OrganizationSize
 from root.root_elements import router
+from schemas.organizations.organization_schema import OrganizationTypeSchema, IndustrySchema, OrganizationSizeSchema
 from schemas.schemas import OrganizationSchema
 
 # Configure logging
