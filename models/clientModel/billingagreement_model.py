@@ -16,12 +16,11 @@ class BillingAgreement(Base):
     status = Column(String, nullable=True)
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
 
+    # ✅ Change direct reference to string reference
     client = relationship("Client", back_populates="billing_agreements")
-    tickets = relationship("Ticket", back_populates="billing_agreement")
+    tickets = relationship("Ticket", back_populates="billing_agreement")  # Change Ticket → "Ticket"
     billing_agreement_items = relationship("BillingAgreementItem", back_populates="billing_agreement")
-
-    # ✅ Use string reference for SLACondition to avoid import issues
-    sla_condition = relationship("SLACondition", back_populates="billing_agreements")
+    sla_condition = relationship("SLACondition", back_populates="billing_agreements")  # Change SLACondition → "SLACondition"
 
 
 

@@ -52,8 +52,8 @@ class Ticket(Base):
     )
 
     # ✅ Fix Relationship for BillingAgreement
-    billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
+    billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     contact = relationship("Contact", back_populates="tickets")
     sla_condition = relationship("SLACondition", back_populates="tickets")
 
