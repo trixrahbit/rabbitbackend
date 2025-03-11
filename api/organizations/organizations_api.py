@@ -29,15 +29,18 @@ async def get_organizations(db: Session = Depends(get_db), current_user: User = 
 
 @router.patch("/organizations/{org_id}", response_model=OrganizationSchema)
 async def update_organization(org_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
-    db_organization = db.query(Organization).filter(Organization.org_id == org_id).first()
-    if db_organization is None:
+    db_organization = db.query(Organization).filter(Organization.id == org_id).first()
+    if not db_organization:
         raise HTTPException(status_code=404, detail="Organization not found")
-    update_data = organization.dict(exclude_unset=True)
+
+    update_data = organization.model_dump(exclude_unset=True)  # ✅ Fix for Pydantic v2
     for key, value in update_data.items():
         setattr(db_organization, key, value)
+
     db.commit()
     db.refresh(db_organization)
     return db_organization
+
 
 @router.delete("/organizations/{org_id}", response_model=OrganizationSchema)
 async def delete_organization(org_id: int, db: Session = Depends(get_db)):
@@ -48,10 +51,10 @@ async def delete_organization(org_id: int, db: Session = Depends(get_db)):
     db.commit()
     return organization
 
-@router.post("/organizations/{org_id}", response_model=OrganizationSchema)
-async def create_organization(org_id: int, organization: OrganizationSchema, db: Session = Depends(get_db)):
-    organization = Organization(**organization.dict())
-    db.add(organization)
+@router.post("/organizations", response_model=OrganizationSchema)
+async def create_organization(organization: OrganizationSchema, db: Session = Depends(get_db)):
+    new_organization = Organization(**organization.model_dump())  # ✅ Using model_dump() for Pydantic v2
+    db.add(new_organization)
     db.commit()
-    db.refresh(organization)
-    return organization
+    db.refresh(new_organization)
+    return new_organization
