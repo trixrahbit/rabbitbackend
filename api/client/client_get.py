@@ -1,18 +1,14 @@
 import logging
-from datetime import datetime, timedelta
-
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from api.user.user_router import get_db
 from models.models import Client, Organization
 from root.root_elements import router
-from schemas.schemas import ClientSchema
+from schemas.schemas import ClientSchema  # Ensure schema exists
 
 
-
-
-# Existing endpoint for reading clients with pagination
+# 🔹 Get a client by ID under a specific organization
 @router.get("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
 async def get_client_by_id(org_id: int, client_id: int, db: Session = Depends(get_db)):
     client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
@@ -21,30 +17,32 @@ async def get_client_by_id(org_id: int, client_id: int, db: Session = Depends(ge
     return client
 
 
-
-# New endpoint to return all clients in JSON format without pagination
+# 🔹 Get all clients for an organization
 @router.get("/organizations/{org_id}/clients", response_model=List[ClientSchema])
 async def get_clients(org_id: int, db: Session = Depends(get_db)):
-    clients = db.query(Client).filter(Client.organization_id == org_id).all()
-    return clients
+    return db.query(Client).filter(Client.organization_id == org_id).all()
 
 
-# Endpoint to get client ID based on client name
-@router.get("/{org_id}/clients/{client_name}", response_model=ClientSchema)
-async def get_client_id(org_id: int, client_name: str, db: Session = Depends(get_db)):
-    client = db.query(Client).filter(Client.client_name == client_name).first()
+# 🔹 Get client by name within an organization
+@router.get("/organizations/{org_id}/clients/name/{client_name}", response_model=ClientSchema)
+async def get_client_by_name(org_id: int, client_name: str, db: Session = Depends(get_db)):
+    client = db.query(Client).filter(Client.name == client_name, Client.organization_id == org_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     return client
 
+
+# 🔹 Create a new client under an organization
 @router.post("/organizations/{org_id}/clients", response_model=ClientSchema)
 async def create_client(org_id: int, client: ClientSchema, db: Session = Depends(get_db)):
-    db_client = Client(**client.dict(), organization_id=org_id)
-    db.add(db_client)
+    new_client = Client(**client.model_dump(), organization_id=org_id)  # ✅ Use model_dump() for Pydantic v2
+    db.add(new_client)
     db.commit()
-    db.refresh(db_client)
-    return db_client
+    db.refresh(new_client)
+    return new_client
 
+
+# 🔹 Delete a client under an organization
 @router.delete("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
 async def delete_client(org_id: int, client_id: int, db: Session = Depends(get_db)):
     client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
@@ -56,13 +54,14 @@ async def delete_client(org_id: int, client_id: int, db: Session = Depends(get_d
     return client
 
 
+# 🔹 Update a client under an organization
 @router.patch("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
 async def update_client(org_id: int, client_id: int, client: ClientSchema, db: Session = Depends(get_db)):
     db_client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
     if not db_client:
         raise HTTPException(status_code=404, detail="Client not found")
 
-    update_data = client.dict(exclude_unset=True)
+    update_data = client.model_dump(exclude_unset=True)  # ✅ Use model_dump() instead of dict()
     for key, value in update_data.items():
         setattr(db_client, key, value)
 
@@ -71,13 +70,10 @@ async def update_client(org_id: int, client_id: int, client: ClientSchema, db: S
     return db_client
 
 
-
-#Endpoint to get client stats
-@router.get("/{org_id}/clients/{client_id}/stats", response_model=ClientSchema)
+# 🔹 Get client stats (Ensure correct schema if needed)
+@router.get("/organizations/{org_id}/clients/{client_id}/stats", response_model=ClientSchema)
 async def get_client_stats(org_id: int, client_id: int, db: Session = Depends(get_db)):
-    client = db.query(Client).filter(Client.id == client_id).first()
+    client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     return client
-
-
