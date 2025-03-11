@@ -24,6 +24,7 @@ class SLA(Base):
     name = Column(String, unique=True, nullable=False)
     description = Column(String, nullable=True)
 
+    conditions = relationship("SLACondition", back_populates="sla_policy")
 
 class Priority(Base):
     __tablename__ = 'priorities'
