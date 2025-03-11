@@ -3,10 +3,11 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship  # Ensure correct import path
 from datetime import datetime
+from db_config.db_connection import Base
 
-from models import Base
-from models.subscription.subscription_model import Subscription
-from models.clientModel.billingagreement_model import BillingAgreement
+
+
+
 
 # ✅ Association table for users and roles (Many-to-Many)
 user_roles = Table(
@@ -21,6 +22,9 @@ role_permissions = Table(
     Column('role_id', Integer, ForeignKey('roles.id', ondelete="CASCADE"), primary_key=True),
     Column('permission_id', Integer, ForeignKey('permissions.id', ondelete="CASCADE"), primary_key=True)
 )
+
+
+
 
 # 🔹 **Organization Model (Owns Subscriptions & Users)**
 class Organization(Base):

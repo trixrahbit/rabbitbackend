@@ -1,8 +1,4 @@
-from sqlalchemy.orm import relationship, declarative_base
-
-
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
 
 from models.models import Client, User
 from models.projects.projects_model import Project, Task, Story
@@ -51,9 +47,6 @@ Client.branding_settings = relationship("BrandingSettings", back_populates="clie
 BrandingSettings.client = relationship("Client", back_populates="branding_settings")
 
 
-
-# Ensure all models are imported in the correct order
-from models.base import Base  # ✅ Ensure Base is imported first
 from models.clientModel.sla_model import SLA, SLACondition, Priority, Impact
 from models.clientModel.billingagreement_model import BillingAgreement, BillingAgreementItem
 from models.models import Client

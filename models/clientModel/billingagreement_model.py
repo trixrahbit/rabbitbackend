@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func, Numeric
 from sqlalchemy.orm import relationship
-
-from models import Base
+from db_config.db_connection import Base
 
 
 class BillingAgreement(Base):

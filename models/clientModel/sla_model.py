@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
-
-from models import Base
+from db_config.db_connection import Base
 
 class SLACondition(Base):
     __tablename__ = 'sla_conditions'

@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from db_config.db_connection import Base
 
-Base = declarative_base()
 
 class Template(Base):
     __tablename__ = "templates"

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from models import Base
+from db_config.db_connection import Base
 
 
 class BookingLink(Base):

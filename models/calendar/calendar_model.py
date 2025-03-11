@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from db_config.db_connection import Base
 
-from models import Base
 
 class CalendarEvent(Base):
     __tablename__ = "calendar_events"

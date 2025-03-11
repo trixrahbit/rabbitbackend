@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func, Enum
 from sqlalchemy.orm import relationship
 import enum
-
 from db_config.db_connection import Base
 
 # Define Enum for Project Status
