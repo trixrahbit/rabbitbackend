@@ -50,6 +50,7 @@ BrandingSettings.client = relationship("Client", back_populates="branding_settin
 from models.clientModel.sla_model import SLA, SLACondition, Priority, Impact
 from models.clientModel.billingagreement_model import BillingAgreement, BillingAgreementItem
 from models.clientModel.csat_model import Survey
+from models.clientModel.contact_model import Contact
 from models.models import Client
 from models.models import Organization
 from models.clientModel.ticket_model import Ticket

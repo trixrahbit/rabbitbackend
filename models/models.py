@@ -51,7 +51,6 @@ class Organization(Base):
     clients = relationship("Client", back_populates="organization", cascade="all, delete-orphan")
     users = relationship("User", back_populates="organization", foreign_keys="[User.organization_id]")
     subscriptions = relationship("Subscription", back_populates="organization", cascade="all, delete-orphan")
-    surveys = relationship("Survey", back_populates="organization", cascade="all, delete-orphan")
 
 
 class Client(Base):
@@ -79,7 +78,7 @@ class Client(Base):
     contacts = relationship("Contact", back_populates="client", cascade="all, delete-orphan")
     tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")
     billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
-
+    surveys = relationship("Survey", back_populates="client", cascade="all, delete-orphan")
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
 class User(Base):

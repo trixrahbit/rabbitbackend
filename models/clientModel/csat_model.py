@@ -10,12 +10,10 @@ class Survey(Base):
     description = Column(Text)
     sent_date = Column(DateTime, default=func.now())
     response_rate = Column(Numeric)
-    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    client_id = Column(Integer, ForeignKey('client.id'))
 
-
-
-    organization = relationship("Organization", back_populates="surveys")
     responses = relationship("SurveyResponse", back_populates="survey")
+    client = relationship("Client", back_populates="surveys")
 
 
 class SurveyResponse(Base):
