@@ -33,6 +33,8 @@ class Priority(Base):
     level = Column(Integer, nullable=False)  # Higher numbers mean higher priority
     description = Column(String, nullable=True)
 
+    sla_conditions = relationship("SLACondition", back_populates="priority")
+
 
 class Impact(Base):
     __tablename__ = 'impacts'
@@ -40,6 +42,8 @@ class Impact(Base):
     name = Column(String, unique=True, nullable=False)
     level = Column(Integer, nullable=False)  # Higher numbers mean greater impact
     description = Column(String, nullable=True)
+
+    sla_conditions = relationship("SLACondition", back_populates="impact")
 
 
 
