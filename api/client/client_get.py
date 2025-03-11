@@ -35,6 +35,7 @@ async def get_client_by_name(org_id: int, client_name: str, db: Session = Depend
 # 🔹 Create a new client under an organization
 @router.post("/organizations/{org_id}/clients", response_model=ClientSchema)
 async def create_client(org_id: int, client: ClientCreate, db: Session = Depends(get_db)):
+    print("📢 Received Client Data:", client.dict())  # ✅ Debugging output
     new_client = Client(
         name=client.name,
         phone=client.phone,
