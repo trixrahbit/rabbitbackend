@@ -58,3 +58,18 @@ async def create_organization(organization: OrganizationSchema, db: Session = De
     db.commit()
     db.refresh(new_organization)
     return new_organization
+
+
+@router.get("/org_types", response_model=List[OrganizationTypeSchema])
+async def get_organization_types(db: Session = Depends(get_db)):
+    return db.query(OrganizationType).all()
+
+# 🔹 Get all industries
+@router.get("/industries", response_model=List[IndustrySchema])
+async def get_industries(db: Session = Depends(get_db)):
+    return db.query(Industry).all()
+
+# 🔹 Get all organization sizes
+@router.get("/org_sizes", response_model=List[OrganizationSizeSchema])
+async def get_organization_sizes(db: Session = Depends(get_db)):
+    return db.query(OrganizationSize).all()
