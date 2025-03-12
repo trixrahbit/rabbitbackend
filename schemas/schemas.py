@@ -53,10 +53,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: constr(min_length=7)
     agree_to_terms: bool
-    organization_id: int
     creator_id: Optional[int] = None
     type: Optional[str] = None
-    organization_id: int
 
     # Use Config to define model behavior with SQLAlchemy if needed
     class Config:
