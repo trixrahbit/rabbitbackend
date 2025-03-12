@@ -30,12 +30,12 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     # Hash the password
     hashed_password = hash_password(user_data.password)
 
-    # Create new user without an assigned organization
-    db_user = UserCreate(
+    # ✅ Correct: Create a `User` model object, not `UserCreate`
+    db_user = User(
         name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_password,
-        agree_to_terms=user_data.agree_to_terms,
+        organization_id=None,  # Set organization_id to None if it's not assigned
     )
 
     db.add(db_user)
@@ -43,6 +43,3 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
 
     return {"message": "User registered successfully."}
-
-
-

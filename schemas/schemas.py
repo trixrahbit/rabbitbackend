@@ -51,10 +51,8 @@ class OrganizationSchema(BaseModel):
 class UserCreate(BaseModel):
     name: constr(min_length=1)
     email: EmailStr
-    hashed_password: constr(min_length=7)
+    password: constr(min_length=7)
     agree_to_terms: bool
-    creator_id: Optional[int] = None
-    type: Optional[str] = None
 
     # Use Config to define model behavior with SQLAlchemy if needed
     class Config:
