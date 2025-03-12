@@ -57,23 +57,39 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
 
 
 
-@router.get("/confirm-email")
-async def confirm_email(token: str = Query(...), db: Session = Depends(get_db)):
-    payload = verify_access_token(token)  # ✅ Decode token
+def send_confirmation_email(to_email: str, name: str, token: str):
+    confirmation_link = f"https://app.webitservices.com/confirm-email?token={token}"
 
-    if not payload or "email" not in payload:
-        raise HTTPException(status_code=400, detail="Invalid or expired token.")
+    email_body = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirm Your Email</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; }}
+            .container {{ max-width: 480px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }}
+            .header {{ font-size: 20px; font-weight: bold; color: #333; margin-bottom: 15px; }}
+            .content {{ font-size: 16px; color: #555; line-height: 1.6; }}
+            .button {{ display: inline-block; background-color: #007BFF; color: white; padding: 12px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 20px; }}
+            .footer {{ font-size: 12px; color: #888; margin-top: 20px; }}
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="header">Confirm Your Email Address</div>
+        <div class="content">
+            <p>Hello <strong>{name}</strong>,</p>
+            <p>Thank you for signing up! Please confirm your email address by clicking the button below:</p>
+            <a href="{confirmation_link}" class="button">Confirm Email</a>
+            <p>If you didn’t sign up, please ignore this email.</p>
+        </div>
+        <div class="footer">© 2024 Your Company. All rights reserved.</div>
+    </div>
+    </body>
+    </html>
+    """
 
-    user = db.query(User).filter(User.email == payload["email"]).first()
+    send_email(to_email, "Confirm Your Email", email_body, html=True)
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-
-    if user.is_active:
-        return {"message": "Your email is already confirmed."}
-
-    # Activate user
-    user.is_active = True
-    db.commit()
-
-    return {"message": "Email confirmed successfully. You can now log in."}
