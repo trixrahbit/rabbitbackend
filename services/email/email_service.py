@@ -33,13 +33,17 @@ def send_email(to_email: str, subject: str, content: str, html: bool = False):
         msg.set_content(content)
 
     try:
-        context = ssl.create_default_context()
-        with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:  # ✅ Use `SMTP()` instead of `SMTP_SSL()`
-            server.starttls(context=context)  # ✅ Enables TLS for security
-            server.login(settings.EMAIL_SENDER, settings.EMAIL_PASSWORD)
-            server.send_message(msg)
-            print(f"✅ Email sent to {to_email}")
-            return True
+        # ✅ Use standard SMTP, not SSL
+        server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
+        server.ehlo()  # ✅ Identify with the SMTP server
+        server.starttls()  # ✅ Upgrade connection to secure TLS
+        server.ehlo()
+        server.login(settings.EMAIL_SENDER, settings.EMAIL_PASSWORD)  # ✅ Login securely
+        server.send_message(msg)
+        server.quit()  # ✅ Close the connection
+
+        print(f"✅ Email sent to {to_email}")
+        return True
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
         return False
