@@ -7,3 +7,6 @@ class EmailSettings(BaseSettings):
     EMAIL_PASSWORD: str
     EMAIL_HOST: str
     EMAIL_PORT: int
+
+    class Config:
+        orm_mode = True

@@ -2,12 +2,9 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 import os
-from dotenv import load_dotenv
 
 from models.emailModels.email import EmailSettings
 
-# ✅ Load environment variables
-load_dotenv()
 settings = EmailSettings()
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
