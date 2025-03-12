@@ -4,8 +4,11 @@ from email.message import EmailMessage
 import os
 from dotenv import load_dotenv
 
+from models.emailModels.email import EmailSettings
+
 # ✅ Load environment variables
 load_dotenv()
+settings = EmailSettings()
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -25,7 +28,7 @@ def send_email(to_email: str, subject: str, content: str, html: bool = False):
     """
     msg = EmailMessage()
     msg["Subject"] = subject
-    msg["From"] = EMAIL_SENDER
+    msg["From"] = settings.EMAIL_SENDER  # ✅ Uses Pydantic settings
     msg["To"] = to_email
 
     if html:
@@ -35,8 +38,8 @@ def send_email(to_email: str, subject: str, content: str, html: bool = False):
 
     try:
         context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as server:
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        with smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT, context=context) as server:
+            server.login(settings.EMAIL_SENDER, settings.EMAIL_PASSWORD)
             server.send_message(msg)
             print(f"✅ Email sent to {to_email}")
             return True
