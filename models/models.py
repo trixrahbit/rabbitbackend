@@ -92,7 +92,7 @@ class User(Base):
     location = Column(String)
     hashed_password = Column(String)
     organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=False)  # ✅ Users belong to an Org
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=False)
     is_superuser = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
