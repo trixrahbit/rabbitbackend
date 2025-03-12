@@ -31,12 +31,11 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     hashed_password = hash_password(user_data.password)
 
     # Create new user without an assigned organization
-    db_user = User(
+    db_user = UserCreate(
         name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_password,
         agree_to_terms=user_data.agree_to_terms,
-        organization_id=None  # User has no org yet
     )
 
     db.add(db_user)
