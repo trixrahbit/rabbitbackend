@@ -2,10 +2,9 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 import os
+from root.root_elements import Settings
 
-from models.emailModels.email import EmailSettings
-
-settings = EmailSettings()
+settings = Settings()
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
