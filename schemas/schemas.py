@@ -29,6 +29,8 @@ class ClientCreate(BaseModel):
     creator_id: int
     organization_id: int
 
+    class Config:
+        from_attributes = True
 
 class OrganizationSchema(BaseModel):
     name: str

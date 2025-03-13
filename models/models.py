@@ -101,7 +101,7 @@ class User(Base):
     outlook_refresh_token = Column(String, nullable=True)
     outlook_token_expires_at = Column(DateTime, nullable=True)
     time_zone = Column(String, nullable=True)
-
+    agree_to_terms = Column(Boolean, default=False)
     # ✅ Many-to-Many relationship with roles
     roles = relationship('Role', secondary=user_roles, back_populates='users')
     organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied

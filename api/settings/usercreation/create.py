@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from auth.auth_util import hash_password, verify_access_token, create_access_token
 from api.user.user_router import get_db
-from models.models import User, Organization
+from models.models import User, Organization, Client
 from root.root_elements import router
 from schemas.schemas import UserCreate
 import re
@@ -16,11 +16,6 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     if not user_data.agree_to_terms:
         raise HTTPException(status_code=400, detail="Must agree to terms and conditions.")
 
-    # ✅ Check if user already exists
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User with this email already exists.")
-
     # ✅ Extract domain from email
     email_domain_match = re.search(r"@([a-zA-Z0-9.-]+)$", user_data.email)
     if not email_domain_match:
@@ -28,33 +23,57 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
 
     email_domain = email_domain_match.group(1)
 
-    # ✅ Check if organization exists for domain
+    # ✅ Check if organization already exists
     existing_organization = db.query(Organization).filter(Organization.domain == email_domain).first()
+
     if existing_organization:
         raise HTTPException(
             status_code=400,
             detail=f"Your company ({existing_organization.name}) is already registered. Please ask the admin to add you."
         )
 
-    # ✅ Hash the password before saving
-    hashed_password = hash_password(user_data.password)
+    # ✅ Create a new Organization with the provided company name
+    new_organization = Organization(
+        name=user_data.company_name,  # ✅ Use provided company name
+        domain=email_domain,
+        super_admin=True  # ✅ First user is Super Admin
+    )
+    db.add(new_organization)
+    db.commit()
+    db.refresh(new_organization)
 
-    # ✅ Create user with `is_active=False` (requires email confirmation)
+    # ✅ Ensure a default Client exists
+    existing_client = db.query(Client).filter(Client.organization_id == new_organization.id).first()
+    if not existing_client:
+        new_client = Client(
+            name=user_data.company_name,  # ✅ Use company name for the client
+            organization_id=new_organization.id
+        )
+        db.add(new_client)
+        db.commit()
+        db.refresh(new_client)
+
+    # ✅ Create User and assign them to the new Organization
+    hashed_password = hash_password(user_data.password)
     db_user = User(
         name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_password,
-        is_active=False,
-        organization_id=None  # Organization ID is assigned later
+        organization_id=new_organization.id,  # ✅ Assign user to their new organization
+        agree_to_terms=user_data.agree_to_terms,
+        is_active=False  # ✅ User must verify email before activation
     )
-
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    return {"message": "User registered successfully. Please check your email to confirm your account."}
+    # ✅ Generate email confirmation token
+    token = create_access_token({"sub": db_user.email})
 
+    # ✅ Send confirmation email
+    send_confirmation_email(db_user.email, db_user.name, token)
 
+    return {"message": "User registered successfully. Please check your email to verify your account."}
 
 
 def send_confirmation_email(to_email: str, name: str, token: str):
@@ -92,4 +111,3 @@ def send_confirmation_email(to_email: str, name: str, token: str):
     """
 
     send_email(to_email, "Confirm Your Email", email_body, html=True)
-
