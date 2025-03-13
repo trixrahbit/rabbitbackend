@@ -13,6 +13,7 @@ class ClientSchema(BaseModel):
     industry: Optional[str] = None
     size: Optional[str] = None
     description: Optional[str] = None
+    domain: Optional[str] = None
     logo: Optional[str] = None
     website: Optional[str] = None
     revenue: Optional[str] = None
