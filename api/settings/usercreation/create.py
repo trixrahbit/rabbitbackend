@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from auth.auth_util import hash_password, verify_access_token, create_access_token
+from auth.auth_util import hash_password, create_access_token
 from api.user.user_router import get_db
 from models.models import User, Organization, Client
 from root.root_elements import router
 from schemas.schemas import UserCreate
 import re
-from fastapi import Query
 
 from services.email.email_service import send_email
 
@@ -36,24 +35,25 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     new_organization = Organization(
         name=user_data.company_name,  # ✅ Use provided company name
         domain=email_domain,
-        super_admin=True  # ✅ First user is Super Admin
+        super_admin=False  # ❌ Organization itself should not be super admin
     )
     db.add(new_organization)
     db.commit()
     db.refresh(new_organization)
 
-    # ✅ Ensure a default Client exists
+    # ✅ Ensure a default Client exists, copying the domain from the organization
     existing_client = db.query(Client).filter(Client.organization_id == new_organization.id).first()
     if not existing_client:
         new_client = Client(
             name=user_data.company_name,  # ✅ Use company name for the client
+            domain=email_domain,  # ✅ Copy domain
             organization_id=new_organization.id
         )
         db.add(new_client)
         db.commit()
         db.refresh(new_client)
 
-    # ✅ Create User and assign them to the new Organization
+    # ✅ Create User and assign them to the new Organization as a Super Admin
     hashed_password = hash_password(user_data.password)
     db_user = User(
         name=user_data.name,
@@ -61,7 +61,8 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
         hashed_password=hashed_password,
         organization_id=new_organization.id,  # ✅ Assign user to their new organization
         agree_to_terms=user_data.agree_to_terms,
-        is_active=False  # ✅ User must verify email before activation
+        is_active=False,  # ✅ User must verify email before activation
+        is_superuser=True  # ✅ First user is super admin
     )
     db.add(db_user)
     db.commit()
