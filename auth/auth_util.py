@@ -1,6 +1,6 @@
 import os
 import datetime
-import jwt  # ✅ Use `pyjwt`
+import jwt  # ✅ Using `pyjwt`
 from jwt import ExpiredSignatureError, InvalidTokenError
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -45,9 +45,9 @@ def verify_access_token(token: str):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload  # ✅ Contains the original data
     except ExpiredSignatureError:
-        raise HTTPException(status_code=400, detail="Token has expired.")
+        raise HTTPException(status_code=401, detail="Token has expired.")
     except InvalidTokenError:
-        raise HTTPException(status_code=400, detail="Invalid token.")
+        raise HTTPException(status_code=401, detail="Invalid token.")
 
 
 # ✅ Get Current User with `super_admin` from Organization
@@ -66,7 +66,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
 
         # ✅ Fetch user & join Organization to get `super_admin`
         user = (
-            db.query(User, Organization.super_admin)
+            db.query(User)
             .join(Organization, User.organization_id == Organization.id, isouter=True)
             .filter(User.email == user_email)
             .first()
@@ -75,14 +75,16 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         if not user:
             raise credentials_exception
 
-        # ✅ Extract `user_obj` and `super_admin`
-        user_obj, super_admin = user
+        # ✅ Extract `super_admin` status
+        user_obj = user
+        super_admin = user_obj.organization.super_admin if user_obj.organization else False
+
         user_dict = {
             "id": user_obj.id,
             "name": user_obj.name,
             "email": user_obj.email,
             "organization_id": user_obj.organization_id,
-            "super_admin": super_admin if super_admin is not None else False,
+            "super_admin": super_admin,
         }
 
         return user_dict
