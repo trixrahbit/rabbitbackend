@@ -104,7 +104,7 @@ def send_confirmation_email(to_email: str, name: str, token: str):
             <a href="{confirmation_link}" class="button">Confirm Email</a>
             <p>If you didn’t sign up, please ignore this email.</p>
         </div>
-        <div class="footer">© 2024 Your Company. All rights reserved.</div>
+        <div class="footer">© 2025 WEBIT Services. All rights reserved.</div>
     </div>
     </body>
     </html>
