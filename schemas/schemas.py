@@ -55,6 +55,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: constr(min_length=7)
     agree_to_terms: bool
+    company_name: constr(min_length=1)
 
     # Use Config to define model behavior with SQLAlchemy if needed
     class Config:
