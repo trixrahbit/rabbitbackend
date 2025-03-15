@@ -1,10 +1,11 @@
 import os
 import datetime
 import jwt  # ✅ Using `pyjwt`
+from jose import JWTError
 from jwt import ExpiredSignatureError, InvalidTokenError
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from starlette import status
 from passlib.context import CryptContext
 from api.user.user_router import get_db
@@ -51,7 +52,7 @@ def verify_access_token(token: str):
 
 
 # ✅ Get Current User with `super_admin` from Organization
-async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> User:
     """Fetch the authenticated user from the database including their `super_admin` status."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -59,15 +60,15 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = verify_access_token(token)  # ✅ Reuses verification function
+        payload = verify_access_token(token)
         user_email = payload.get("sub")
         if not user_email:
             raise credentials_exception
 
-        # ✅ Fetch user & join Organization to get `super_admin`
+        # ✅ Fetch user and ensure organization data is loaded
         user = (
             db.query(User)
-            .join(Organization, User.organization_id == Organization.id, isouter=True)
+            .options(joinedload(User.organization))  # ✅ Ensures organization relationship is loaded
             .filter(User.email == user_email)
             .first()
         )
@@ -75,18 +76,10 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         if not user:
             raise credentials_exception
 
-        # ✅ Extract `super_admin` status
-        user_obj = user
-        super_admin = user_obj.organization.super_admin if user_obj.organization else False
+        # ✅ Set `super_admin` property dynamically
+        user.super_admin = user.organization.super_admin if user.organization else False
 
-        user_dict = {
-            "id": user_obj.id,
-            "name": user_obj.name,
-            "email": user_obj.email,
-            "organization_id": user_obj.organization_id,
-            "super_admin": super_admin,
-        }
+        return user  # ✅ Returns the User SQLAlchemy model instead of a dictionary
 
-        return user_dict
-    except HTTPException:
+    except JWTError:
         raise credentials_exception
