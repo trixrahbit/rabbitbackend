@@ -14,7 +14,7 @@ def read_users_for_organization(org_id: int, db: Session = Depends(get_db)):
     logging.info(f"Fetching all users for organization {org_id}")
 
     # Query users while eagerly loading roles
-    users = db.query(User).options(joinedload(User.roles)).filter(User.client_id == org_id).all()
+    users = db.query(User).options(joinedload(User.roles)).filter(User.organization_id == org_id).all()
 
     # If the users list is empty, it means no users were found for that organization
     if not users:
