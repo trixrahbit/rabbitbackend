@@ -20,18 +20,20 @@ def require_super_admin(user: dict):
         raise HTTPException(status_code=403, detail="Super Admin access required")
 
 # 🔹 GET Organizations (Only show all if Super Admin)
+# 🔹 GET Organizations (Only show all if Super Admin)
 @router.get("/organizations", response_model=List[OrganizationSchema])
-async def get_organizations(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+async def get_organizations(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Fetch organizations based on user role."""
 
-    logger.info(f"User {current_user['email']} requesting organizations. Super Admin: {current_user.get('super_admin', False)}")
+    logger.info(f"User {current_user.email} requesting organizations. Super Admin: {current_user.super_admin}")
 
-    if current_user.get("super_admin", False):  # ✅ Super Admins see all
+    if current_user.super_admin:  # ✅ Use dot notation
         organizations = db.query(Organization).all()
     else:
-        organizations = db.query(Organization).filter(Organization.id == current_user["organization_id"]).all()
+        organizations = db.query(Organization).filter(Organization.id == current_user.organization_id).all()
 
     return organizations
+
 
 # 🔹 UPDATE Organization (Super Admin Required)
 @router.patch("/organizations/{org_id}", response_model=OrganizationSchema)
