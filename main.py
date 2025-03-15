@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+
+from account.user import profile_api
 from api.checklists import checklist_router
 from api.calendar import calendar_router
 from api.integrations.outlook import outlook_oauth
@@ -53,3 +55,5 @@ app.include_router(calendar_router.router)
 app.include_router(outlook_oauth.router)
 
 app.include_router(user_api.router)
+
+app.include_router(profile_api.router)
