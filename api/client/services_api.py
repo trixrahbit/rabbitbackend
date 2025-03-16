@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException
 from typing import List
 
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.clientModel.services_model import Service
 from root.root_elements import router
 from schemas.client.services_schema import ServiceSchema

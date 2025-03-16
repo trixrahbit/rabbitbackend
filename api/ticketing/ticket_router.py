@@ -2,7 +2,7 @@ import logging
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.clientModel.ticket_model import Ticket
 from root.root_elements import router
 from schemas.client.ticket_schema import TicketSchema, TicketUpdate, TicketCreate

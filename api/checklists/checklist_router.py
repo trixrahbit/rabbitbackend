@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from crudops.crud_checklist import create_checklist, update_checklist, get_checklist_by_task, get_checklists_by_story as crud_get_checklists_by_story
 from root.root_elements import router
 from schemas.checklist_schema import Checklist, ChecklistUpdate, ChecklistCreate

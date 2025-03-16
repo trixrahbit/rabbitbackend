@@ -19,4 +19,10 @@ Base = declarative_base(metadata=metadata)
 # ✅ Use synchronous session for SQLAlchemy operations
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 

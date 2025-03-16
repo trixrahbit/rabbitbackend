@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.models import Organization, Contact
 from root.root_elements import router
 from schemas.client.contact_schema import ContactSchema, ContactCreate, ContactUpdate

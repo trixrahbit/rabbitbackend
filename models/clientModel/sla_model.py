@@ -26,25 +26,6 @@ class SLA(Base):
 
     conditions = relationship("SLACondition", back_populates="sla_policy")
 
-class Priority(Base):
-    __tablename__ = 'priorities'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
-    level = Column(Integer, nullable=False)  # Higher numbers mean higher priority
-    description = Column(String, nullable=True)
-
-    sla_conditions = relationship("SLACondition", back_populates="priority")
-
-
-class Impact(Base):
-    __tablename__ = 'impacts'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
-    level = Column(Integer, nullable=False)  # Higher numbers mean greater impact
-    description = Column(String, nullable=True)
-
-    sla_conditions = relationship("SLACondition", back_populates="impact")
-
 
 
 

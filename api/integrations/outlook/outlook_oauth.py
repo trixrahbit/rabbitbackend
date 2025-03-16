@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from auth.auth_util import get_current_user
 from models import User
 from models.calendar.bookinglink_model import BookingLink

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
 
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.models import Organization
 from models.subscription.subscription_model import SubscriptionPlan as SQLASubscriptionPlan, Subscription as SQLASubscription
 from root.root_elements import router

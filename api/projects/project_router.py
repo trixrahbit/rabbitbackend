@@ -4,7 +4,7 @@ from typing import List
 from models.projects.projects_model import Project, Phase, Task, Sprint, Story
 from root.root_elements import router
 from schemas.project import project as schemas
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 import logging
 
 

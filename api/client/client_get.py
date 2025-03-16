@@ -1,8 +1,8 @@
-import logging
+from loguru import logger
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.models import Client, Organization
 from root.root_elements import router
 from schemas.schemas import ClientSchema, ClientCreate  # Ensure schema exists
@@ -11,6 +11,7 @@ from schemas.schemas import ClientSchema, ClientCreate  # Ensure schema exists
 # 🔹 Get a client by ID under a specific organization
 @router.get("/organizations/{org_id}/clients/{client_id}", response_model=ClientSchema)
 async def get_client_by_id(org_id: int, client_id: int, db: Session = Depends(get_db)):
+    logger.info(f"Get client by id: {client_id}")
     client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")

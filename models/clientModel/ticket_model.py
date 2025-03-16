@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Bool
 from sqlalchemy.orm import relationship
 from db_config.db_connection import Base
 
-
 class Ticket(Base):
     __tablename__ = 'tickets'
 
@@ -14,10 +13,10 @@ class Ticket(Base):
     subject = Column(String(255), nullable=True)
     description = Column(Text, nullable=False)
 
-    # Status and Priorities
-    status = Column(Integer, nullable=False, default=1)  # Open by default
-    priority = Column(Integer, nullable=False, default=3)  # Default to Medium
-    impact = Column(Integer, nullable=False, default=1)  # Default to Low
+    # Status, Priority, and Impact as Foreign Keys
+    status_id = Column(Integer, ForeignKey('statuses.id'), nullable=False)  # ✅ FK to Status Table
+    priority_id = Column(Integer, ForeignKey('priorities.id'), nullable=False)  # ✅ FK to Priority Table
+    impact_id = Column(Integer, ForeignKey('impacts.id'), nullable=False)  # ✅ FK to Impact Table
 
     # Dates
     created_at = Column(DateTime, server_default=func.now())
@@ -43,16 +42,13 @@ class Ticket(Base):
     ticket_type = Column(Integer, nullable=True)
     ticket_category = Column(Integer, nullable=True)
 
-    # ✅ Fix Relationship for SurveyResponse
-    survey_responses = relationship(
-        "SurveyResponse",
-        back_populates="ticket",
-        foreign_keys="[SurveyResponse.ticket_id]"  # ✅ Explicitly define which FK to use
-    )
-
-    # ✅ Fix Relationship for BillingAgreement
-    client = relationship("Client", back_populates="tickets")  # ✅ Fix: Attach to Client
+    # ✅ Relationships
+    client = relationship("Client", back_populates="tickets")
     billing_agreement = relationship("BillingAgreement", back_populates="tickets")
     contact = relationship("Contact", back_populates="tickets")
     sla_condition = relationship("SLACondition", back_populates="tickets")
 
+    # ✅ New Relationships
+    priority = relationship("Priority", back_populates="tickets")  # ✅ Relationship to Priority
+    impact = relationship("Impact", back_populates="tickets")  # ✅ Relationship to Impact
+    status = relationship("Status", back_populates="tickets")  # ✅ Relationship to Status

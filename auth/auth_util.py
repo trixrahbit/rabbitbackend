@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session, joinedload
 from starlette import status
 from passlib.context import CryptContext
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from models.models import User, Organization  # ✅ Import Organization model
 from root.root_elements import settings
 

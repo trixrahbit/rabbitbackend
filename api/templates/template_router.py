@@ -5,7 +5,7 @@ from typing import List
 from models.templates.templateModel import Template, TemplatePhase, TemplateTask, TemplateSprint, TemplateStory
 from root.root_elements import router
 from schemas.template import template_schema as schemas
-from api.user.user_router import get_db
+from db_config.db_connection import get_db
 from schemas.template.template_schema import PhaseCreate, TaskCreate, StoryCreate, SprintCreate
 
 # Configure logging
