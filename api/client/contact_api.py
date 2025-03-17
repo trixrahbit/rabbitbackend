@@ -7,6 +7,16 @@ from root.root_elements import router
 from schemas.client.contact_schema import ContactSchema, ContactUpdate, ContactCreate
 from typing import List
 
+
+@router.get("/api/organizations/{org_id}/contacts", response_model=List[ContactSchema])
+def get_contacts(org_id: int, db: Session = Depends(get_db)):
+    contacts = db.query(Contact).filter(Contact.client_id == org_id).all()
+
+    if not contacts:
+        raise HTTPException(status_code=404, detail="No contacts found for this organization")
+    return contacts
+
+
 # ✅ GET ALL CONTACTS FOR A CLIENT
 @router.get("/clients/{client_id}/contacts", response_model=List[ContactSchema])
 def get_contacts(client_id: int, db: Session = Depends(get_db)):
