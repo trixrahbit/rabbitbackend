@@ -1,3 +1,4 @@
+from api.contracts import contractAPI
 from logger_config import logger  # Import centralized logger
 # Log startup message
 from fastapi import FastAPI
@@ -49,6 +50,7 @@ async def preflight_request(full_path: str):
 app.include_router(ticket_router.router)
 app.include_router(client_get.router)
 
+app.include_router(contractAPI.router)
 app.include_router(contact_api.router)
 app.include_router(ticketinfo_router.router)
 app.include_router(role_get.router)
