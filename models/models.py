@@ -79,6 +79,7 @@ class Client(Base):
     tickets = relationship("Ticket", back_populates="client", cascade="all, delete-orphan")
     billing_agreements = relationship("BillingAgreement", back_populates="client", cascade="all, delete-orphan")
     surveys = relationship("Survey", back_populates="client", cascade="all, delete-orphan")
+    contracts = relationship("Contract", back_populates="client", cascade="all, delete-orphan")
 
 # 🔹 **User Model (Belongs to Organization, Not Client)**
 class User(Base):

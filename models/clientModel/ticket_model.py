@@ -55,3 +55,4 @@ class Ticket(Base):
     status = relationship("Status", back_populates="tickets")
     queue = relationship("Queue", back_populates="tickets")  # NEW relationship
     survey_responses = relationship("SurveyResponse", back_populates="ticket")
+    contracts= relationship("Contract", back_populates="tickets")

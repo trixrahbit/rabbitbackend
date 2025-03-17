@@ -82,3 +82,9 @@ async def merge_tickets(ticket_ids: List[int], db: Session = Depends(get_db)):
 
     db.commit()
     return primary_ticket
+
+
+@router.get("/tickets/{queue_id}", response_model=List[TicketSchema])
+async def get_tickets_by_queue(queue_id: int, db: Session = Depends(get_db)):
+    tickets = db.query(Ticket).filter(Ticket.queue_id == queue_id).all()
+    return tickets
