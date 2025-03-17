@@ -52,3 +52,4 @@ class Ticket(Base):
     priority = relationship("Priority", back_populates="tickets")  # ✅ Relationship to Priority
     impact = relationship("Impact", back_populates="tickets")  # ✅ Relationship to Impact
     status = relationship("Status", back_populates="tickets")  # ✅ Relationship to Status
+    survey_responses = relationship("SurveyResponse", back_populates="ticket")  # ✅ Relationship to SurveyResponse
