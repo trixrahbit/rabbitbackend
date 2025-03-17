@@ -35,19 +35,29 @@ async def get_organizations(db: Session = Depends(get_db), current_user: User = 
     return organizations
 
 # 🔹 POST: Update Organization
+from fastapi import Header
+
 @router.post("/organizations/{org_id}", response_model=OrganizationSchema)
 async def update_organization(
     org_id: int,
     organization: OrganizationSchema,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    super_admin_org_id: int = Header(None),  # ✅ Get logged-in user's org ID from header
 ):
     logger.info(f"🔄 Attempting to update organization {org_id} via POST")
 
-    if not (current_user.super_admin or current_user.organization_id == org_id):
-        logger.error(f"❌ Unauthorized update attempt by {current_user.get('email')}")
+    # ✅ Ensure the logged-in user's org ID is provided
+    if not super_admin_org_id:
+        logger.error(f"❌ Missing Super Admin Org ID in request headers")
+        raise HTTPException(status_code=400, detail="Super Admin Org ID is required")
+
+    # ✅ Check if the logged-in user is a super admin OR if they belong to the specified org
+    if not (current_user.super_admin or super_admin_org_id == org_id):
+        logger.error(f"❌ Unauthorized update attempt by {current_user.get('email')} on org {org_id}")
         raise HTTPException(status_code=403, detail="Not authorized to update this organization")
 
+    # ✅ Fetch the organization that needs updating
     db_organization = db.query(Organization).filter(Organization.id == org_id).first()
     if not db_organization:
         logger.error(f"❌ Organization {org_id} not found")
@@ -68,6 +78,7 @@ async def update_organization(
     except Exception as e:
         logger.error(f"⚠️ Server Error while updating {org_id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 
 

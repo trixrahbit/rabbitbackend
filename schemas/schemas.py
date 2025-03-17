@@ -34,6 +34,7 @@ class ClientCreate(BaseModel):
         from_attributes = True
 
 class OrganizationSchema(BaseModel):
+    id: int
     name: str
     domain: str
     phone: Optional[str] = None
