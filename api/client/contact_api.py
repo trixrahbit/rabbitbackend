@@ -39,11 +39,16 @@ def create_contact(org_id: int, client_id: int, contact: ContactCreate, db: Sess
     if not client:
         raise HTTPException(status_code=404, detail="Client not found in this organization")
 
-    new_contact = Contact(**contact.dict(), client_id=client_id)
+    # ✅ Fix: Ensure `client_id` is not in `contact.dict()` before unpacking
+    contact_data = contact.dict(exclude={"client_id"})  # Remove `client_id` if it exists in the schema
+
+    # ✅ Create Contact
+    new_contact = Contact(**contact_data, client_id=client_id)  # Add `client_id` separately
     db.add(new_contact)
     db.commit()
     db.refresh(new_contact)
     return new_contact
+
 
 
 # ✅ UPDATE A CONTACT
