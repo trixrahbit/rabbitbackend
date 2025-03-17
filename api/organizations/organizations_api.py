@@ -43,21 +43,20 @@ async def update_organization(
     organization: OrganizationSchema,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
-    super_admin_org_id: int = Header(None),  # ✅ Get logged-in user's org ID from header
+    super_admin_org_id: int = Header(None)  # ✅ Optional now
 ):
     logger.info(f"🔄 Attempting to update organization {org_id} via POST")
 
-    # ✅ Ensure the logged-in user's org ID is provided
-    if not super_admin_org_id:
-        logger.error(f"❌ Missing Super Admin Org ID in request headers")
-        raise HTTPException(status_code=400, detail="Super Admin Org ID is required")
+    # ✅ If `super_admin_org_id` is missing, use the current user's org ID
+    if super_admin_org_id is None:
+        super_admin_org_id = current_user.organization_id  # ✅ Default to user's org
 
-    # ✅ Check if the logged-in user is a super admin OR if they belong to the specified org
+    # ✅ Check if user can edit the organization
     if not (current_user.super_admin or super_admin_org_id == org_id):
         logger.error(f"❌ Unauthorized update attempt by {current_user.get('email')} on org {org_id}")
         raise HTTPException(status_code=403, detail="Not authorized to update this organization")
 
-    # ✅ Fetch the organization that needs updating
+    # ✅ Fetch the organization
     db_organization = db.query(Organization).filter(Organization.id == org_id).first()
     if not db_organization:
         logger.error(f"❌ Organization {org_id} not found")
