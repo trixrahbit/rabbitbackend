@@ -2,6 +2,8 @@ import logging
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List
+
+from auth.auth_util import get_current_user
 from db_config.db_connection import get_db
 from models.models import User, BusinessHours
 from root.root_elements import router
@@ -89,3 +91,24 @@ def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_
 
 
 
+@router.put("/users/{user_id}/session-timeout")
+async def update_session_timeout(
+    user_id: int,
+    session_timeout: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    if current_user["id"] != user_id:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if session_timeout not in [15, 30, 60, 120]:
+        raise HTTPException(status_code=400, detail="Invalid session timeout value")
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.session_timeout = session_timeout
+    db.commit()
+    db.refresh(user)
+    return {"message": "Session timeout updated successfully", "session_timeout": user.session_timeout}
