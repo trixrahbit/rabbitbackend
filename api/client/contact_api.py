@@ -8,7 +8,7 @@ from schemas.client.contact_schema import ContactSchema, ContactUpdate, ContactC
 from typing import List
 
 
-@router.get("/api/organizations/{org_id}/contacts", response_model=List[ContactSchema])
+@router.get("/organizations/{org_id}/contacts", response_model=List[ContactSchema])
 def get_contacts(org_id: int, db: Session = Depends(get_db)):
     contacts = db.query(Contact).filter(Contact.client_id == org_id).all()
 
