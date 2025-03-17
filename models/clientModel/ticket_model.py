@@ -34,9 +34,6 @@ class Ticket(Base):
     sla_condition_id = Column(Integer, ForeignKey('sla_conditions.id'), nullable=True)
     queue_id = Column(Integer, ForeignKey('queues.id'), nullable=True)
 
-    # NEW: Organization association
-    organization_id = Column(Integer, ForeignKey('organizations.id'), nullable=True)
-
     # SLA compliance tracking
     service_level_agreement_met = Column(Boolean, nullable=False, default=False)
 

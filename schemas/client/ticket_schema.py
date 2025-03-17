@@ -10,7 +10,6 @@ class TicketCreate(BaseModel):
     priority_id: int
     impact_id: int
     sla_condition_id: Optional[int] = None
-    organization_id: Optional[int] = None
     billing_agreement_id: Optional[int] = None
     contact_id: Optional[int] = None
     queue_id: Optional[int] = None    # NEW
@@ -27,7 +26,6 @@ class TicketUpdate(BaseModel):
     impact_id: Optional[int] = None
     resolved_at: Optional[str] = None
     sla_condition_id: Optional[int] = None
-    organization_id: Optional[int] = None
     billing_agreement_id: Optional[int] = None
     contact_id: Optional[int] = None
     queue_id: Optional[int] = None    # NEW
@@ -46,7 +44,6 @@ class TicketSchema(BaseModel):
     created_at: Optional[str] = None
     resolved_at: Optional[str] = None
     sla_condition_id: Optional[int] = None
-    organization_id: Optional[int] = None
     billing_agreement_id: Optional[int] = None
     contact_id: Optional[int] = None
     queue_id: Optional[int] = None    # NEW
