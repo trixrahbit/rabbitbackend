@@ -15,4 +15,4 @@ class Contract(Base):
 
     # Relationships (adjust as needed)
     client = relationship("Client", back_populates="contracts")
-    tickets = relationship("Ticket", back_populates="contract")
+    tickets = relationship("Ticket", back_populates="contracts")
