@@ -44,7 +44,7 @@ async def update_organization(
 ):
     logger.info(f"🔄 Attempting to update organization {org_id} via POST")
 
-    if not (current_user.get("super_admin", False) or current_user.get("organization_id") == org_id):
+    if not (current_user.super_admin or current_user.organization_id == org_id):
         logger.error(f"❌ Unauthorized update attempt by {current_user.get('email')}")
         raise HTTPException(status_code=403, detail="Not authorized to update this organization")
 
