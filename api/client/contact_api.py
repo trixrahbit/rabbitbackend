@@ -1,44 +1,63 @@
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from db_config.db_connection import get_db
-from models.models import Organization, Contact
+from models import Contact
+from models.models import Organization, Client
 from root.root_elements import router
-from schemas.client.contact_schema import ContactSchema, ContactCreate, ContactUpdate
+from schemas.client.contact_schema import ContactSchema, ContactUpdate, ContactCreate
 from typing import List
 
-# GET ALL CONTACTS FOR AN ORGANIZATION
-@router.get("/organizations/{org_id}/contacts", response_model=List[ContactSchema])
-def get_contacts(org_id: int, db: Session = Depends(get_db)):
-    contacts = db.query(Contact).filter(Contact.organization_id == org_id).all()
+# ✅ GET ALL CONTACTS FOR A CLIENT IN AN ORGANIZATION
+@router.get("/organizations/{org_id}/clients/{client_id}/contacts", response_model=List[ContactSchema])
+def get_contacts(org_id: int, client_id: int, db: Session = Depends(get_db)):
+    contacts = db.query(Contact).filter(
+        Contact.organization_id == org_id,
+        Contact.client_id == client_id
+    ).all()
+
     if not contacts:
-        raise HTTPException(status_code=404, detail="No contacts found for this organization")
+        raise HTTPException(status_code=404, detail="No contacts found for this client in the organization")
     return contacts
 
-# GET A SPECIFIC CONTACT
-@router.get("/organizations/{org_id}/contacts/{contact_id}", response_model=ContactSchema)
-def get_contact_by_id(org_id: int, contact_id: int, db: Session = Depends(get_db)):
-    contact = db.query(Contact).filter(Contact.id == contact_id, Contact.organization_id == org_id).first()
+# ✅ GET A SPECIFIC CONTACT
+@router.get("/organizations/{org_id}/clients/{client_id}/contacts/{contact_id}", response_model=ContactSchema)
+def get_contact_by_id(org_id: int, client_id: int, contact_id: int, db: Session = Depends(get_db)):
+    contact = db.query(Contact).filter(
+        Contact.id == contact_id,
+        Contact.organization_id == org_id,
+        Contact.client_id == client_id
+    ).first()
+
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
     return contact
 
-# CREATE A NEW CONTACT
-@router.post("/organizations/{org_id}/contacts", response_model=ContactSchema)
-def create_contact(org_id: int, contact: ContactCreate, db: Session = Depends(get_db)):
+# ✅ CREATE A NEW CONTACT (Now Associates with Client)
+@router.post("/organizations/{org_id}/clients/{client_id}/contacts", response_model=ContactSchema)
+def create_contact(org_id: int, client_id: int, contact: ContactCreate, db: Session = Depends(get_db)):
     org = db.query(Organization).filter(Organization.id == org_id).first()
+    client = db.query(Client).filter(Client.id == client_id, Client.organization_id == org_id).first()
+
     if not org:
         raise HTTPException(status_code=404, detail="Organization not found")
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
 
-    new_contact = Contact(**contact.dict(), organization_id=org_id)
+    new_contact = Contact(**contact.dict(), organization_id=org_id, client_id=client_id)
     db.add(new_contact)
     db.commit()
     db.refresh(new_contact)
     return new_contact
 
-# UPDATE A CONTACT
-@router.patch("/organizations/{org_id}/contacts/{contact_id}", response_model=ContactSchema)
-def update_contact(org_id: int, contact_id: int, contact_update: ContactUpdate, db: Session = Depends(get_db)):
-    contact = db.query(Contact).filter(Contact.id == contact_id, Contact.organization_id == org_id).first()
+# ✅ UPDATE A CONTACT
+@router.patch("/organizations/{org_id}/clients/{client_id}/contacts/{contact_id}", response_model=ContactSchema)
+def update_contact(org_id: int, client_id: int, contact_id: int, contact_update: ContactUpdate, db: Session = Depends(get_db)):
+    contact = db.query(Contact).filter(
+        Contact.id == contact_id,
+        Contact.organization_id == org_id,
+        Contact.client_id == client_id
+    ).first()
+
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
 
@@ -50,10 +69,15 @@ def update_contact(org_id: int, contact_id: int, contact_update: ContactUpdate, 
     db.refresh(contact)
     return contact
 
-# DELETE A CONTACT
-@router.delete("/organizations/{org_id}/contacts/{contact_id}", response_model=ContactSchema)
-def delete_contact(org_id: int, contact_id: int, db: Session = Depends(get_db)):
-    contact = db.query(Contact).filter(Contact.id == contact_id, Contact.organization_id == org_id).first()
+# ✅ DELETE A CONTACT
+@router.delete("/organizations/{org_id}/clients/{client_id}/contacts/{contact_id}", response_model=ContactSchema)
+def delete_contact(org_id: int, client_id: int, contact_id: int, db: Session = Depends(get_db)):
+    contact = db.query(Contact).filter(
+        Contact.id == contact_id,
+        Contact.organization_id == org_id,
+        Contact.client_id == client_id
+    ).first()
+
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
 

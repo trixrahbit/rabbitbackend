@@ -11,7 +11,7 @@ from api.ticketing import ticket_router
 from api.ticketing import ticketinfo_router
 from api.projects import project_router
 from api.templates import template_router
-from api.client import client_get
+from api.client import client_get, contact_api
 from api.organizations import organizations_api
 from api.profile import user_profile
 from api.role import role_get
@@ -49,6 +49,7 @@ async def preflight_request(full_path: str):
 app.include_router(ticket_router.router)
 app.include_router(client_get.router)
 
+app.include_router(contact_api.router)
 app.include_router(ticketinfo_router.router)
 app.include_router(role_get.router)
 app.include_router(create.router)
