@@ -8,6 +8,11 @@ from root.root_elements import router
 from schemas.client.sla_schema import SLASchema
 
 
+@router.get("/sla", response_model=List[SLASchema])
+async def get_sla(db: Session = Depends(get_db)):
+    sla = db.query(SLA).all()
+    return sla
+
 @router.get("/{client_id}/sla", response_model=List[SLASchema])
 async def get_sla(client_id: int, db: Session = Depends(get_db)):
     sla = db.query(SLA).filter(SLA.client_id == client_id).all()
