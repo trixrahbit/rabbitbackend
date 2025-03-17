@@ -112,3 +112,5 @@ class UserUpdateSchema(BaseModel):
 class TimeZoneUpdate(BaseModel):
     time_zone: str
 
+class SessionTimeoutUpdateSchema(BaseModel):
+    session_timeout: int

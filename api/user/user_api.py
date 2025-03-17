@@ -7,7 +7,7 @@ from auth.auth_util import get_current_user
 from db_config.db_connection import get_db
 from models.models import User, BusinessHours
 from root.root_elements import router
-from schemas.schemas import UserList, UserUpdateSchema
+from schemas.schemas import UserList, UserUpdateSchema, SessionTimeoutUpdateSchema
 from sqlalchemy.orm import joinedload
 from passlib.context import CryptContext
 
@@ -94,21 +94,21 @@ def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_
 @router.put("/users/{user_id}/session-timeout")
 async def update_session_timeout(
     user_id: int,
-    session_timeout: int,
+    update_data: SessionTimeoutUpdateSchema,  # ✅ Expect data in the request body
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user)
 ):
-    if current_user["id"] != user_id:
-        raise HTTPException(status_code=403, detail="Unauthorized")
-
-    if session_timeout not in [15, 30, 60, 120]:
-        raise HTTPException(status_code=400, detail="Invalid session timeout value")
+    """ Allow users to update their session timeout setting. """
+    if current_user.id != user_id and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="You do not have permission to modify this user.")
 
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found.")
 
-    user.session_timeout = session_timeout
-    db.commit()
-    db.refresh(user)
-    return {"message": "Session timeout updated successfully", "session_timeout": user.session_timeout}
+    if update_data.session_timeout:  # ✅ Update session timeout from request body
+        user.session_timeout = update_data.session_timeout
+        db.commit()
+        db.refresh(user)
+
+    return {"message": "Session timeout updated successfully!", "session_timeout": user.session_timeout}
