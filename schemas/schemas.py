@@ -85,6 +85,7 @@ class UserList(BaseModel):
     mobile: Optional[str] = None
     location: Optional[str] = None
     roles: Optional[List[RoleSchema]] = []
+    session_timeout: Optional[int] = 30  # ✅ Include session timeout in API responses
 
     class Config:
         from_attributes = True
@@ -106,6 +107,7 @@ class UserUpdateSchema(BaseModel):
     business_hours: Optional[List[BusinessHoursSchema]]
     time_zone: Optional[str]
     outlook_token_expires_at: Optional[str]
+    session_timeout: Optional[int]  # ✅ Allow updating session timeout
 
 class TimeZoneUpdate(BaseModel):
     time_zone: str

@@ -102,6 +102,8 @@ class User(Base):
     outlook_token_expires_at = Column(DateTime, nullable=True)
     time_zone = Column(String, nullable=True)
     agree_to_terms = Column(Boolean, default=False)
+    session_timeout = Column(Integer, default=30)  # ✅ New Field (Default: 30 minutes)
+
     # ✅ Many-to-Many relationship with roles
     roles = relationship('Role', secondary=user_roles, back_populates='users')
     organization = relationship("Organization", back_populates="users", foreign_keys=[organization_id])  # ✅ Fix applied
