@@ -4,11 +4,11 @@ from pydantic import BaseModel, constr, EmailStr
 
 
 class ContactSchema(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     email: str
-    phone: str
-    role: str
+    phone: Optional[str] = None
+    role: Optional[str] = None  # ✅ Allow role to be null
     client_id: int
 
     class Config:
