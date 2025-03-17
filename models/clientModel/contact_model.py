@@ -10,7 +10,7 @@ class Contact(Base):
     last_name = Column(String(100), nullable=False)
     email = Column(String(255), nullable=False, unique=True)  # Ensure uniqueness
     phone = Column(String(20), nullable=True)
-    role = Column(String(100), nullable=True)  # Ensuring a reasonable max length
+    role = Column(String(255), nullable=True)  # Ensuring a reasonable max length
     client_id = Column(Integer, ForeignKey('clients.id'), nullable=False)
 
     # ✅ Relationship to Client

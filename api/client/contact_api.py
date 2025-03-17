@@ -41,7 +41,7 @@ def create_contact(org_id: int, client_id: int, contact: ContactCreate, db: Sess
 
     contact_data = contact.dict(exclude={"client_id"})
 
-    # ✅ Force conversion to string if needed
+    # ✅ Ensure `role` is always a string
     contact_data["role"] = str(contact_data["role"]) if contact_data["role"] else None
 
     new_contact = Contact(**contact_data, client_id=client_id)
@@ -49,6 +49,7 @@ def create_contact(org_id: int, client_id: int, contact: ContactCreate, db: Sess
     db.commit()
     db.refresh(new_contact)
     return new_contact
+
 
 
 
