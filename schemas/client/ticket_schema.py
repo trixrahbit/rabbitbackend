@@ -5,9 +5,9 @@ class TicketCreate(BaseModel):
     title: str
     subject: Optional[str] = None
     description: str
-    status: str
-    priority: str
-    impact: str
+    status_id: int       # Changed from 'status'
+    priority_id: int     # Changed from 'priority'
+    impact_id: int       # Changed from 'impact'
     sla_id: Optional[int] = None
     organization_id: Optional[int] = None
     billing_agreement_id: Optional[int] = None
@@ -20,9 +20,9 @@ class TicketUpdate(BaseModel):
     title: Optional[str] = None
     subject: Optional[str] = None
     description: Optional[str] = None
-    status: Optional[str] = None
-    priority: Optional[str] = None
-    impact: Optional[str] = None
+    status_id: Optional[int] = None       # Changed from 'status'
+    priority_id: Optional[int] = None     # Changed from 'priority'
+    impact_id: Optional[int] = None       # Changed from 'impact'
     resolved_at: Optional[str] = None
     sla_id: Optional[int] = None
     organization_id: Optional[int] = None
@@ -37,9 +37,9 @@ class TicketSchema(BaseModel):
     title: str
     subject: Optional[str] = None
     description: str
-    status: str
-    priority: str
-    impact: str
+    status_id: int         # Changed from 'status'
+    priority_id: int       # Changed from 'priority'
+    impact_id: int         # Changed from 'impact'
     created_at: Optional[str] = None
     resolved_at: Optional[str] = None
     sla_id: Optional[int] = None
