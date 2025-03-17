@@ -112,3 +112,19 @@ async def update_session_timeout(
         db.refresh(user)
 
     return {"message": "Session timeout updated successfully!", "session_timeout": user.session_timeout}
+
+@router.get("/users/{user_id}/session-timeout")
+async def get_session_timeout(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Fetch the session timeout for a given user."""
+    if current_user.id != user_id and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Not authorized to access this data.")
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    return {"session_timeout": user.session_timeout if user.session_timeout is not None else 30}
