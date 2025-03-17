@@ -53,3 +53,13 @@ class TicketSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+class QueueSchema(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True

@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from db_config.db_connection import get_db
+from models.ticket.queueModel import Queue
 from models.ticket.ticketinfo_Models import Priority, Impact, Status
 from root.root_elements import router
+from schemas.client.ticket_schema import QueueSchema
 from schemas.ticket.ticketinfo_Schema import PrioritySchema, PriorityCreate, ImpactSchema, ImpactCreate, StatusSchema, StatusCreate
 
 
@@ -73,3 +75,8 @@ async def create_status(status: StatusCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_status)
     return new_status
+
+
+@router.get("/queues", response_model=List[QueueSchema])
+async def get_queues(db: Session = Depends(get_db)):
+    return db.query(Queue).all()
