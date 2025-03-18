@@ -24,7 +24,7 @@ class Contract(Base):
     tickets = relationship("Ticket", back_populates="contracts")
     services = relationship("ContractService", back_populates="contract", cascade="all, delete-orphan")
     service_bundles = relationship("ContractServiceBundle", back_populates="contract", cascade="all, delete-orphan")
-
+    fixed_costs = relationship("ContractFixedCost", back_populates="contract", cascade="all, delete-orphan")
 
 class ContractBlock(Base):
     __tablename__ = 'contract_blocks'
