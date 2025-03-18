@@ -12,7 +12,7 @@ from api.ticketing import ticket_router
 from api.ticketing import ticketinfo_router
 from api.projects import project_router
 from api.templates import template_router
-from api.client import client_get, contact_api
+from api.client import client_get, contact_api, sla_api
 from api.organizations import organizations_api
 from api.profile import user_profile
 from api.role import role_get
@@ -73,3 +73,5 @@ app.include_router(outlook_oauth.router)
 app.include_router(user_api.router)
 
 app.include_router(profile_api.router)
+
+app.include_router(sla_api.router)
