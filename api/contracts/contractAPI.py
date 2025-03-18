@@ -1,7 +1,7 @@
 import loguru as logging
 from fastapi import Depends, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 from typing import List
 from db_config.db_connection import get_db
 
@@ -724,7 +724,11 @@ async def delete_service(service_id: int, db: Session = Depends(get_db)):
 
 @router.get("/service-bundles", response_model=List[ServiceBundleSchema])
 async def get_service_bundles(db: Session = Depends(get_db)):
-    bundles = db.query(ServiceBundle).all()
+    bundles = (
+        db.query(ServiceBundle)
+        .options(subqueryload(ServiceBundle.services))
+        .all()
+    )
     return bundles
 
 
