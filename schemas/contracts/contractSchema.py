@@ -7,6 +7,7 @@ class ContractCreate(BaseModel):
     start_date: str  # ISO date string, e.g. "2025-04-01"
     end_date: Optional[str] = None
     details: Optional[str] = None
+    pricing: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -17,7 +18,7 @@ class ContractUpdate(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     details: Optional[str] = None
-
+    pricing: Optional[float] = None
     class Config:
         from_attributes = True
 
@@ -28,6 +29,21 @@ class ContractSchema(BaseModel):
     start_date: str
     end_date: Optional[str] = None
     details: Optional[str] = None
+    pricing: Optional[float]
 
     class Config:
         from_attributes = True
+
+class ContractBlockCreate(BaseModel):
+    contract_id: int
+    name: str
+    description: Optional[str] = None
+
+class ContractBlockSchema(BaseModel):
+    id: int
+    contract_id: int
+    name: str
+    description: Optional[str] = None
+
+    class Config:
+        orm_mode = True

@@ -29,7 +29,7 @@ async def create_contract(contract: ContractCreate, db: Session = Depends(get_db
     return db_contract
 
 @router.put("/contracts/{contract_id}", response_model=ContractSchema)
-async def update_contract(contract_id: int, contract_data: ContractUpdate, db: Session = Depends(get_db)):
+async def update_contract(contract_id: int, contract_data: ContractCreate, db: Session = Depends(get_db)):
     db_contract = db.query(Contract).filter(Contract.id == contract_id).first()
     if not db_contract:
         raise HTTPException(status_code=404, detail="Contract not found")
