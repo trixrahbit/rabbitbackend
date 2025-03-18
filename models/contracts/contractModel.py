@@ -117,12 +117,11 @@ class ContractRoleCost(Base):
 # Global Service and Bundle Models
 # ------------------------
 service_bundle_association = Table(
-    'service_bundle_association',
+    'service_bundle_association',  # This is the name SQL Server will look for.
     Base.metadata,
-    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id')),
-    Column('service_id', Integer, ForeignKey('contract_services.id'))
+    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id'), primary_key=True),
+    Column('service_id', Integer, ForeignKey('contract_services.id'), primary_key=True)
 )
-
 
 class Service(Base):
     __tablename__ = 'contract_services'  # Updated table name to "services"
@@ -132,15 +131,14 @@ class Service(Base):
     cost = Column(Float, nullable=False)
 
 
-
-
 class ServiceBundle(Base):
-    __tablename__ = 'contract_service_bundles'  # Table name remains as before.
+    __tablename__ = 'contract_service_bundles'  # Make sure this matches your DB
     id = Column(Integer, primary_key=True, autoincrement=True)
     bundle_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
     cost = Column(Float, nullable=False)
-    # Define relationship: A bundle can have many services.
+
+    # Establish a many-to-many relationship with Service via the association table.
     services = relationship("Service", secondary=service_bundle_association, backref="bundles")
 
 
