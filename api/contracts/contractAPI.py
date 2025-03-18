@@ -17,7 +17,7 @@ from models.contracts.contractModel import (
     ContractRoleCost,
     ContractService,
     ContractServiceBundle,
-    ContractServiceBundleUnit
+    ContractServiceBundleUnit, BillingMilestoneStatus, ContractCategory, ContractType
 )
 
 # Import schemas
@@ -27,7 +27,8 @@ from schemas.contracts.contractSchema import ContractSchema, ContractCreate, Con
     ContractExclusionCreate, ExclusionBillingCodeSchema, ExclusionBillingCodeCreate, ContractRateSchema, \
     ContractRateCreate, ContractRoleCostSchema, ContractRoleCostCreate, ContractServiceSchema, ContractServiceCreate, \
     ContractServiceBundleSchema, ContractServiceBundleCreate, ContractServiceBundleUnitSchema, \
-    ContractServiceBundleUnitCreate
+    ContractServiceBundleUnitCreate, BillingMilestoneStatusCreate, BillingMilestoneStatusSchema, ContractCategorySchema, \
+    ContractCategoryCreate, ContractTypeSchema, ContractTypeCreate
 
 from root.root_elements import router
 
@@ -547,3 +548,110 @@ async def delete_bundle_unit(bundle_id: int, unit_id: int, db: Session = Depends
     return db_unit
 
 
+# --------------------
+# Contract Type Endpoints
+# --------------------
+@router.get("/contract-types", response_model=List[ContractTypeSchema])
+async def get_contract_types(db: Session = Depends(get_db)):
+    types = db.query(ContractType).all()
+    return types
+
+@router.post("/contract-types", response_model=ContractTypeSchema)
+async def create_contract_type(contract_type: ContractTypeCreate, db: Session = Depends(get_db)):
+    db_type = ContractType(**contract_type.dict())
+    db.add(db_type)
+    db.commit()
+    db.refresh(db_type)
+    return db_type
+
+@router.put("/contract-types/{type_id}", response_model=ContractTypeSchema)
+async def update_contract_type(type_id: int, contract_type: ContractTypeCreate, db: Session = Depends(get_db)):
+    db_type = db.query(ContractType).filter(ContractType.id == type_id).first()
+    if not db_type:
+        raise HTTPException(status_code=404, detail="Contract type not found")
+    for key, value in contract_type.dict(exclude_unset=True).items():
+        setattr(db_type, key, value)
+    db.commit()
+    db.refresh(db_type)
+    return db_type
+
+@router.delete("/contract-types/{type_id}", response_model=ContractTypeSchema)
+async def delete_contract_type(type_id: int, db: Session = Depends(get_db)):
+    db_type = db.query(ContractType).filter(ContractType.id == type_id).first()
+    if not db_type:
+        raise HTTPException(status_code=404, detail="Contract type not found")
+    db.delete(db_type)
+    db.commit()
+    return db_type
+
+# --------------------
+# Contract Category Endpoints
+# --------------------
+@router.get("/contract-categories", response_model=List[ContractCategorySchema])
+async def get_contract_categories(db: Session = Depends(get_db)):
+    categories = db.query(ContractCategory).all()
+    return categories
+
+@router.post("/contract-categories", response_model=ContractCategorySchema)
+async def create_contract_category(category: ContractCategoryCreate, db: Session = Depends(get_db)):
+    db_category = ContractCategory(**category.dict())
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+@router.put("/contract-categories/{category_id}", response_model=ContractCategorySchema)
+async def update_contract_category(category_id: int, category_data: ContractCategoryCreate, db: Session = Depends(get_db)):
+    db_category = db.query(ContractCategory).filter(ContractCategory.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Contract category not found")
+    for key, value in category_data.dict(exclude_unset=True).items():
+        setattr(db_category, key, value)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+@router.delete("/contract-categories/{category_id}", response_model=ContractCategorySchema)
+async def delete_contract_category(category_id: int, db: Session = Depends(get_db)):
+    db_category = db.query(ContractCategory).filter(ContractCategory.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Contract category not found")
+    db.delete(db_category)
+    db.commit()
+    return db_category
+
+# --------------------
+# Billing Milestone Status Endpoints
+# --------------------
+@router.get("/billing-milestone-statuses", response_model=List[BillingMilestoneStatusSchema])
+async def get_billing_milestone_statuses(db: Session = Depends(get_db)):
+    statuses = db.query(BillingMilestoneStatus).all()
+    return statuses
+
+@router.post("/billing-milestone-statuses", response_model=BillingMilestoneStatusSchema)
+async def create_billing_milestone_status(status: BillingMilestoneStatusCreate, db: Session = Depends(get_db)):
+    db_status = BillingMilestoneStatus(**status.dict())
+    db.add(db_status)
+    db.commit()
+    db.refresh(db_status)
+    return db_status
+
+@router.put("/billing-milestone-statuses/{status_id}", response_model=BillingMilestoneStatusSchema)
+async def update_billing_milestone_status(status_id: int, status_data: BillingMilestoneStatusCreate, db: Session = Depends(get_db)):
+    db_status = db.query(BillingMilestoneStatus).filter(BillingMilestoneStatus.id == status_id).first()
+    if not db_status:
+        raise HTTPException(status_code=404, detail="Billing milestone status not found")
+    for key, value in status_data.dict(exclude_unset=True).items():
+        setattr(db_status, key, value)
+    db.commit()
+    db.refresh(db_status)
+    return db_status
+
+@router.delete("/billing-milestone-statuses/{status_id}", response_model=BillingMilestoneStatusSchema)
+async def delete_billing_milestone_status(status_id: int, db: Session = Depends(get_db)):
+    db_status = db.query(BillingMilestoneStatus).filter(BillingMilestoneStatus.id == status_id).first()
+    if not db_status:
+        raise HTTPException(status_code=404, detail="Billing milestone status not found")
+    db.delete(db_status)
+    db.commit()
+    return db_status
