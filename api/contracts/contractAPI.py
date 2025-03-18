@@ -15,20 +15,32 @@ from models.contracts.contractModel import (
     ExclusionBillingCode,
     ContractRate,
     ContractRoleCost,
-    ContractService,
-    ContractServiceBundle,
-    ContractServiceBundleUnit, BillingMilestoneStatus, ContractCategory, ContractType
+    ContractType,
+    ContractCategory,
+    BillingMilestoneStatus,
+    Service, ServiceBundle,
+    ContractServiceAssignment,
+    ContractServiceBundleAssignment
 )
 
 # Import schemas
-from schemas.contracts.contractSchema import ContractSchema, ContractCreate, ContractUpdate, ContractBlockSchema, \
-    ContractBlockCreate, ContractFixedCostSchema, ContractFixedCostCreate, ContractMilestoneSchema, \
-    ContractMilestoneCreate, ContractChargeSchema, ContractChargeCreate, ContractExclusionSchema, \
-    ContractExclusionCreate, ExclusionBillingCodeSchema, ExclusionBillingCodeCreate, ContractRateSchema, \
-    ContractRateCreate, ContractRoleCostSchema, ContractRoleCostCreate, ContractServiceSchema, ContractServiceCreate, \
-    ContractServiceBundleSchema, ContractServiceBundleCreate, ContractServiceBundleUnitSchema, \
-    ContractServiceBundleUnitCreate, BillingMilestoneStatusCreate, BillingMilestoneStatusSchema, ContractCategorySchema, \
-    ContractCategoryCreate, ContractTypeSchema, ContractTypeCreate, ContractFullCreate
+from schemas.contracts.contractSchema import (
+    ContractSchema, ContractCreate, ContractUpdate, ContractFullCreate,
+    ContractBlockSchema, ContractBlockCreate,
+    ContractFixedCostSchema, ContractFixedCostCreate,
+    ContractMilestoneSchema, ContractMilestoneCreate,
+    ContractChargeSchema, ContractChargeCreate,
+    ContractExclusionSchema, ContractExclusionCreate,
+    ExclusionBillingCodeSchema, ExclusionBillingCodeCreate,
+    ContractRateSchema, ContractRateCreate,
+    ContractRoleCostSchema, ContractRoleCostCreate,
+    ContractTypeSchema, ContractTypeCreate,
+    ContractCategorySchema, ContractCategoryCreate,
+    BillingMilestoneStatusSchema, BillingMilestoneStatusCreate,
+    ServiceSchema, ServiceBundleSchema,
+    ContractServiceAssignmentSchema, ContractServiceAssignmentCreate,
+    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate
+)
 
 from root.root_elements import router
 
@@ -41,26 +53,6 @@ logger = logging.logger
 async def get_contracts(db: Session = Depends(get_db)):
     contracts = db.query(Contract).all()
     return contracts
-
-@router.post("/contracts/services" , response_model=ContractServiceSchema)
-async def create_contract_service(service: ContractServiceCreate, db: Session = Depends(get_db)):
-    db_service = ContractService(**service.dict())
-    db.add(db_service)
-    db.commit()
-    db.refresh(db_service)
-    return db_service
-
-@router.get("/contracts/services", response_model=List[ContractServiceSchema])
-async def get_contract_services(db: Session = Depends(get_db)):
-    services = db.query(ContractService).all()
-    return services
-
-@router.get("/contracts/{contract_id}", response_model=ContractSchema)
-async def get_contract(contract_id: int, db: Session = Depends(get_db)):
-    contract = db.query(Contract).filter(Contract.id == contract_id).first()
-    if not contract:
-        raise HTTPException(status_code=404, detail="Contract not found")
-    return contract
 
 @router.post("/contracts", response_model=ContractSchema)
 async def create_contract(contract: ContractCreate, db: Session = Depends(get_db)):
@@ -90,108 +82,66 @@ async def delete_contract(contract_id: int, db: Session = Depends(get_db)):
     db.commit()
     return contract
 
-
 @router.post("/contracts/full", response_model=ContractSchema)
 async def create_full_contract(contract: ContractFullCreate, db: Session = Depends(get_db)):
     try:
-        # Start a transaction
         with db.begin():
-            # Create the main contract without nested fields.
             contract_data = contract.dict(
                 exclude_unset=True,
-                exclude={"blocks", "fixed_costs", "milestones", "charges", "exclusions", "rates", "role_costs",
-                         "services", "service_bundles"}
+                exclude={"blocks", "fixed_costs", "milestones", "charges", "exclusions", "rates", "role_costs"}
+                # You can choose to exclude service assignments if handled separately.
             )
             db_contract = Contract(**contract_data)
             db.add(db_contract)
-            db.flush()  # flush to get contract.id
-
-            # Create nested Contract Blocks if provided.
+            db.flush()
             if contract.blocks:
                 for block in contract.blocks:
                     block_data = block.dict()
                     block_data["contract_id"] = db_contract.id
                     db_block = ContractBlock(**block_data)
                     db.add(db_block)
-
-            # Create nested Fixed Costs if provided.
             if contract.fixed_costs:
                 for cost in contract.fixed_costs:
                     cost_data = cost.dict()
                     cost_data["contract_id"] = db_contract.id
                     db_cost = ContractFixedCost(**cost_data)
                     db.add(db_cost)
-
-            # Create nested Milestones if provided.
             if contract.milestones:
                 for milestone in contract.milestones:
                     milestone_data = milestone.dict()
                     milestone_data["contract_id"] = db_contract.id
                     db_milestone = ContractMilestone(**milestone_data)
                     db.add(db_milestone)
-
-            # Create nested Charges if provided.
             if contract.charges:
                 for charge in contract.charges:
                     charge_data = charge.dict()
                     charge_data["contract_id"] = db_contract.id
                     db_charge = ContractCharge(**charge_data)
                     db.add(db_charge)
-
-            # Create nested Exclusions if provided.
             if contract.exclusions:
                 for exclusion in contract.exclusions:
                     exclusion_data = exclusion.dict()
                     exclusion_data["contract_id"] = db_contract.id
                     db_exclusion = ContractExclusion(**exclusion_data)
                     db.add(db_exclusion)
-                    # Optionally, create nested billing codes for this exclusion.
                     if exclusion.billing_codes:
                         for code in exclusion.billing_codes:
                             code_data = code.dict()
                             code_data["exclusion_id"] = db_exclusion.id
                             db_code = ExclusionBillingCode(**code_data)
                             db.add(db_code)
-
-            # Create nested Rates if provided.
             if contract.rates:
                 for rate in contract.rates:
                     rate_data = rate.dict()
                     rate_data["contract_id"] = db_contract.id
                     db_rate = ContractRate(**rate_data)
                     db.add(db_rate)
-
-            # Create nested Role Costs if provided.
             if contract.role_costs:
                 for role_cost in contract.role_costs:
                     role_cost_data = role_cost.dict()
                     role_cost_data["contract_id"] = db_contract.id
                     db_role_cost = ContractRoleCost(**role_cost_data)
                     db.add(db_role_cost)
-
-            # Create nested Services if provided.
-            if contract.services:
-                for service in contract.services:
-                    service_data = service.dict()
-                    service_data["contract_id"] = db_contract.id
-                    db_service = ContractService(**service_data)
-                    db.add(db_service)
-
-            # Create nested Service Bundles if provided.
-            if contract.service_bundles:
-                for bundle in contract.service_bundles:
-                    bundle_data = bundle.dict(exclude={"units"})
-                    bundle_data["contract_id"] = db_contract.id
-                    db_bundle = ContractServiceBundle(**bundle_data)
-                    db.add(db_bundle)
-                    db.flush()  # flush to get bundle.id
-                    # Create nested Bundle Units if provided.
-                    if bundle.units:
-                        for unit in bundle.units:
-                            unit_data = unit.dict()
-                            unit_data["bundle_id"] = db_bundle.id
-                            db_unit = ContractServiceBundleUnit(**unit_data)
-                            db.add(db_unit)
         db.commit()
         db.refresh(db_contract)
         return db_contract
@@ -538,139 +488,92 @@ async def delete_contract_role_cost(contract_id: int, role_cost_id: int, db: Ses
     return cost
 
 # --------------------
-# Contract Service Endpoints
+# Contract Service Assignment Endpoints
 # --------------------
+@router.get("/contracts/{contract_id}/service-assignments", response_model=List[ContractServiceAssignmentSchema])
+async def get_contract_service_assignments(contract_id: int, db: Session = Depends(get_db)):
+    assignments = db.query(ContractServiceAssignment).filter(ContractServiceAssignment.contract_id == contract_id).all()
+    return assignments
 
-
-@router.get("/contracts/{contract_id}/services", response_model=List[ContractServiceSchema])
-async def get_contract_services(contract_id: int, db: Session = Depends(get_db)):
-    services = db.query(ContractService).filter(ContractService.contract_id == contract_id).all()
-    return services
-
-@router.post("/contracts/{contract_id}/services", response_model=ContractServiceSchema)
-async def create_contract_service(contract_id: int, service: ContractServiceCreate, db: Session = Depends(get_db)):
-    if service.contract_id != contract_id:
+@router.post("/contracts/{contract_id}/service-assignments", response_model=ContractServiceAssignmentSchema)
+async def create_contract_service_assignment(contract_id: int, assignment: ContractServiceAssignmentCreate, db: Session = Depends(get_db)):
+    if assignment.contract_id != contract_id:
         raise HTTPException(status_code=400, detail="Contract ID mismatch")
-    db_service = ContractService(**service.dict())
-    db.add(db_service)
+    db_assignment = ContractServiceAssignment(**assignment.dict())
+    db.add(db_assignment)
     db.commit()
-    db.refresh(db_service)
-    return db_service
+    db.refresh(db_assignment)
+    return db_assignment
 
-@router.put("/contracts/{contract_id}/services/{service_id}", response_model=ContractServiceSchema)
-async def update_contract_service(contract_id: int, service_id: int, service_data: ContractServiceCreate, db: Session = Depends(get_db)):
-    db_service = db.query(ContractService).filter(
-        ContractService.id == service_id,
-        ContractService.contract_id == contract_id
+@router.put("/contracts/{contract_id}/service-assignments/{assignment_id}", response_model=ContractServiceAssignmentSchema)
+async def update_contract_service_assignment(contract_id: int, assignment_id: int, assignment_data: ContractServiceAssignmentCreate, db: Session = Depends(get_db)):
+    db_assignment = db.query(ContractServiceAssignment).filter(
+        ContractServiceAssignment.id == assignment_id,
+        ContractServiceAssignment.contract_id == contract_id
     ).first()
-    if not db_service:
-        raise HTTPException(status_code=404, detail="Contract service not found")
-    for key, value in service_data.dict(exclude_unset=True).items():
-        setattr(db_service, key, value)
+    if not db_assignment:
+        raise HTTPException(status_code=404, detail="Contract service assignment not found")
+    for key, value in assignment_data.dict(exclude_unset=True).items():
+        setattr(db_assignment, key, value)
     db.commit()
-    db.refresh(db_service)
-    return db_service
+    db.refresh(db_assignment)
+    return db_assignment
 
-@router.delete("/contracts/{contract_id}/services/{service_id}", response_model=ContractServiceSchema)
-async def delete_contract_service(contract_id: int, service_id: int, db: Session = Depends(get_db)):
-    service = db.query(ContractService).filter(
-        ContractService.id == service_id,
-        ContractService.contract_id == contract_id
+@router.delete("/contracts/{contract_id}/service-assignments/{assignment_id}", response_model=ContractServiceAssignmentSchema)
+async def delete_contract_service_assignment(contract_id: int, assignment_id: int, db: Session = Depends(get_db)):
+    db_assignment = db.query(ContractServiceAssignment).filter(
+        ContractServiceAssignment.id == assignment_id,
+        ContractServiceAssignment.contract_id == contract_id
     ).first()
-    if not service:
-        raise HTTPException(status_code=404, detail="Contract service not found")
-    db.delete(service)
+    if not db_assignment:
+        raise HTTPException(status_code=404, detail="Contract service assignment not found")
+    db.delete(db_assignment)
     db.commit()
-    return service
+    return db_assignment
 
 # --------------------
-# Contract Service Bundle Endpoints
+# Contract Service Bundle Assignment Endpoints
 # --------------------
-@router.get("/contracts/{contract_id}/service-bundles", response_model=List[ContractServiceBundleSchema])
-async def get_contract_service_bundles(contract_id: int, db: Session = Depends(get_db)):
-    bundles = db.query(ContractServiceBundle).filter(ContractServiceBundle.contract_id == contract_id).all()
-    return bundles
+@router.get("/contracts/{contract_id}/bundle-assignments", response_model=List[ContractServiceBundleAssignmentSchema])
+async def get_contract_bundle_assignments(contract_id: int, db: Session = Depends(get_db)):
+    assignments = db.query(ContractServiceBundleAssignment).filter(ContractServiceBundleAssignment.contract_id == contract_id).all()
+    return assignments
 
-@router.post("/contracts/{contract_id}/service-bundles", response_model=ContractServiceBundleSchema)
-async def create_contract_service_bundle(contract_id: int, bundle: ContractServiceBundleCreate, db: Session = Depends(get_db)):
-    if bundle.contract_id != contract_id:
+@router.post("/contracts/{contract_id}/bundle-assignments", response_model=ContractServiceBundleAssignmentSchema)
+async def create_contract_bundle_assignment(contract_id: int, assignment: ContractServiceBundleAssignmentCreate, db: Session = Depends(get_db)):
+    if assignment.contract_id != contract_id:
         raise HTTPException(status_code=400, detail="Contract ID mismatch")
-    db_bundle = ContractServiceBundle(**bundle.dict())
-    db.add(db_bundle)
+    db_assignment = ContractServiceBundleAssignment(**assignment.dict())
+    db.add(db_assignment)
     db.commit()
-    db.refresh(db_bundle)
-    return db_bundle
+    db.refresh(db_assignment)
+    return db_assignment
 
-@router.put("/contracts/{contract_id}/service-bundles/{bundle_id}", response_model=ContractServiceBundleSchema)
-async def update_contract_service_bundle(contract_id: int, bundle_id: int, bundle_data: ContractServiceBundleCreate, db: Session = Depends(get_db)):
-    db_bundle = db.query(ContractServiceBundle).filter(
-        ContractServiceBundle.id == bundle_id,
-        ContractServiceBundle.contract_id == contract_id
+@router.put("/contracts/{contract_id}/bundle-assignments/{assignment_id}", response_model=ContractServiceBundleAssignmentSchema)
+async def update_contract_bundle_assignment(contract_id: int, assignment_id: int, assignment_data: ContractServiceBundleAssignmentCreate, db: Session = Depends(get_db)):
+    db_assignment = db.query(ContractServiceBundleAssignment).filter(
+        ContractServiceBundleAssignment.id == assignment_id,
+        ContractServiceBundleAssignment.contract_id == contract_id
     ).first()
-    if not db_bundle:
-        raise HTTPException(status_code=404, detail="Contract service bundle not found")
-    for key, value in bundle_data.dict(exclude_unset=True).items():
-        setattr(db_bundle, key, value)
+    if not db_assignment:
+        raise HTTPException(status_code=404, detail="Contract service bundle assignment not found")
+    for key, value in assignment_data.dict(exclude_unset=True).items():
+        setattr(db_assignment, key, value)
     db.commit()
-    db.refresh(db_bundle)
-    return db_bundle
+    db.refresh(db_assignment)
+    return db_assignment
 
-@router.delete("/contracts/{contract_id}/service-bundles/{bundle_id}", response_model=ContractServiceBundleSchema)
-async def delete_contract_service_bundle(contract_id: int, bundle_id: int, db: Session = Depends(get_db)):
-    db_bundle = db.query(ContractServiceBundle).filter(
-        ContractServiceBundle.id == bundle_id,
-        ContractServiceBundle.contract_id == contract_id
+@router.delete("/contracts/{contract_id}/bundle-assignments/{assignment_id}", response_model=ContractServiceBundleAssignmentSchema)
+async def delete_contract_bundle_assignment(contract_id: int, assignment_id: int, db: Session = Depends(get_db)):
+    db_assignment = db.query(ContractServiceBundleAssignment).filter(
+        ContractServiceBundleAssignment.id == assignment_id,
+        ContractServiceBundleAssignment.contract_id == contract_id
     ).first()
-    if not db_bundle:
-        raise HTTPException(status_code=404, detail="Contract service bundle not found")
-    db.delete(db_bundle)
+    if not db_assignment:
+        raise HTTPException(status_code=404, detail="Contract service bundle assignment not found")
+    db.delete(db_assignment)
     db.commit()
-    return db_bundle
-
-# --------------------
-# Contract Service Bundle Unit Endpoints
-# --------------------
-@router.get("/service-bundles/{bundle_id}/units", response_model=List[ContractServiceBundleUnitSchema])
-async def get_bundle_units(bundle_id: int, db: Session = Depends(get_db)):
-    units = db.query(ContractServiceBundleUnit).filter(ContractServiceBundleUnit.bundle_id == bundle_id).all()
-    return units
-
-@router.post("/service-bundles/{bundle_id}/units", response_model=ContractServiceBundleUnitSchema)
-async def create_bundle_unit(bundle_id: int, unit: ContractServiceBundleUnitCreate, db: Session = Depends(get_db)):
-    if unit.bundle_id != bundle_id:
-        raise HTTPException(status_code=400, detail="Bundle ID mismatch")
-    db_unit = ContractServiceBundleUnit(**unit.dict())
-    db.add(db_unit)
-    db.commit()
-    db.refresh(db_unit)
-    return db_unit
-
-@router.put("/service-bundles/{bundle_id}/units/{unit_id}", response_model=ContractServiceBundleUnitSchema)
-async def update_bundle_unit(bundle_id: int, unit_id: int, unit_data: ContractServiceBundleUnitCreate, db: Session = Depends(get_db)):
-    db_unit = db.query(ContractServiceBundleUnit).filter(
-        ContractServiceBundleUnit.id == unit_id,
-        ContractServiceBundleUnit.bundle_id == bundle_id
-    ).first()
-    if not db_unit:
-        raise HTTPException(status_code=404, detail="Bundle unit not found")
-    for key, value in unit_data.dict(exclude_unset=True).items():
-        setattr(db_unit, key, value)
-    db.commit()
-    db.refresh(db_unit)
-    return db_unit
-
-@router.delete("/service-bundles/{bundle_id}/units/{unit_id}", response_model=ContractServiceBundleUnitSchema)
-async def delete_bundle_unit(bundle_id: int, unit_id: int, db: Session = Depends(get_db)):
-    db_unit = db.query(ContractServiceBundleUnit).filter(
-        ContractServiceBundleUnit.id == unit_id,
-        ContractServiceBundleUnit.bundle_id == bundle_id
-    ).first()
-    if not db_unit:
-        raise HTTPException(status_code=404, detail="Bundle unit not found")
-    db.delete(db_unit)
-    db.commit()
-    return db_unit
-
+    return db_assignment
 
 # --------------------
 # Contract Type Endpoints
