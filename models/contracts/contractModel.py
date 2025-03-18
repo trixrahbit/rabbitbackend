@@ -1,8 +1,14 @@
 from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from db_config.db_connection import Base
-from models import service_bundle_association
 
+
+
+service_bundle_association = Table(
+    'service_bundle_association', Base.metadata,
+    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id'), primary_key=True),
+    Column('service_id', Integer, ForeignKey('contract_services.id'), primary_key=True)
+)
 
 # ------------------------
 # Contract Model and Related Tables

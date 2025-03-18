@@ -239,8 +239,7 @@ class ServiceBundleBase(BaseModel):
 
 class ServiceBundleCreate(ServiceBundleBase):
     service_ids: Optional[List[int]] = []  # List of service IDs to attach
-    class Config:
-        orm_mode = True
+
 
 class ServiceBundleSchema(ServiceBundleBase):
     id: int

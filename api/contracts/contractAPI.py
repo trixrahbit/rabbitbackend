@@ -720,22 +720,35 @@ async def delete_service(service_id: int, db: Session = Depends(get_db)):
     db.commit()
     return db_service
 
+
 @router.get("/service-bundles", response_model=List[ServiceBundleSchema])
 async def get_service_bundles(db: Session = Depends(get_db)):
     bundles = db.query(ServiceBundle).all()
     return bundles
 
+
 @router.post("/service-bundles", response_model=ServiceBundleSchema)
-async def create_service_bundle(bundle: ServiceBundleBase, db: Session = Depends(get_db)):
-    try:
-        db_bundle = ServiceBundle(**bundle.dict())
-        db.add(db_bundle)
+async def create_service_bundle(bundle: ServiceBundleCreate, db: Session = Depends(get_db)):
+    # Create the ServiceBundle object without services first.
+    db_bundle = ServiceBundle(
+        bundle_name=bundle.bundle_name,
+        price=bundle.price,
+        cost=bundle.cost
+    )
+    db.add(db_bundle)
+    db.commit()
+    db.refresh(db_bundle)
+
+    # If there are service IDs provided, associate them.
+    if bundle.service_ids:
+        # Query the Service objects by their IDs.
+        services = db.query(Service).filter(Service.id.in_(bundle.service_ids)).all()
+        db_bundle.services = services
         db.commit()
         db.refresh(db_bundle)
-        return db_bundle
-    except SQLAlchemyError as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
+
+    return db_bundle
+
 
 @router.put("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
 async def update_service_bundle(bundle_id: int, bundle_data: ServiceBundleBase, db: Session = Depends(get_db)):
@@ -748,6 +761,7 @@ async def update_service_bundle(bundle_id: int, bundle_data: ServiceBundleBase, 
     db.refresh(db_bundle)
     return db_bundle
 
+
 @router.delete("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
 async def delete_service_bundle(bundle_id: int, db: Session = Depends(get_db)):
     db_bundle = db.query(ServiceBundle).filter(ServiceBundle.id == bundle_id).first()
@@ -756,4 +770,5 @@ async def delete_service_bundle(bundle_id: int, db: Session = Depends(get_db)):
     db.delete(db_bundle)
     db.commit()
     return db_bundle
+
 

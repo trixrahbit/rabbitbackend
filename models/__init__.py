@@ -1,4 +1,3 @@
-from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from db_config.db_connection import Base
@@ -44,15 +43,7 @@ User.booking_links = relationship("BookingLink", back_populates="user")
 BookingLink.user = relationship("User", back_populates="booking_links")
 
 
-#Relationship bewteen client and branding settings
-Client.branding_settings = relationship("BrandingSettings", back_populates="client")
-BrandingSettings.client = relationship("Client", back_populates="branding_settings")
-service_bundle_association = Table(
-    'service_bundle_association',  # This is the name SQL Server will look for.
-    Base.metadata,
-    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id'), primary_key=True),
-    Column('service_id', Integer, ForeignKey('contract_services.id'), primary_key=True)
-)
+
 
 from models.clientModel.sla_model import SLA, SLACondition
 from models.ticket.ticketinfo_Models import Priority, Impact, Status
