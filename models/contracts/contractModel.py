@@ -150,3 +150,19 @@ class ContractServiceBundleUnit(Base):
     unit_count = Column(Integer, nullable=False)
 
     bundle = relationship("ContractServiceBundle", back_populates="units")
+
+
+class ContractType(Base):
+    __tablename__ = 'contract_types'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+
+class ContractCategory(Base):
+    __tablename__ = 'contract_categories'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+
+class BillingMilestoneStatus(Base):
+    __tablename__ = 'billing_milestone_statuses'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)

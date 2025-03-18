@@ -238,6 +238,45 @@ class ContractServiceBundleUnitSchema(ContractServiceBundleUnitBase):
     class Config:
         orm_mode = True
 
+
+
+# ------------------------
+#Contract Stuff
+# ------------------------
+
+class ContractTypeBase(BaseModel):
+    name: str
+
+class ContractTypeCreate(ContractTypeBase):
+    pass
+
+class ContractTypeSchema(ContractTypeBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class ContractCategoryBase(BaseModel):
+    name: str
+
+class ContractCategoryCreate(ContractCategoryBase):
+    pass
+
+class ContractCategorySchema(ContractCategoryBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class BillingMilestoneStatusBase(BaseModel):
+    name: str
+
+class BillingMilestoneStatusCreate(BillingMilestoneStatusBase):
+    pass
+
+class BillingMilestoneStatusSchema(BillingMilestoneStatusBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 # For forward references
 ContractSchema.update_forward_refs()
 ContractBlockSchema.update_forward_refs()
