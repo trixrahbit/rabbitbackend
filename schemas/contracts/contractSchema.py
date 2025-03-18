@@ -196,8 +196,7 @@ class ContractServiceBase(BaseModel):
     service_name: str
     price: float
     cost: float
-    start_date: str
-    end_date: str
+
 
 class ContractServiceCreate(ContractServiceBase):
     contract_id: int
