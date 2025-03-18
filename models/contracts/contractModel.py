@@ -22,6 +22,9 @@ class Contract(Base):
     role_costs = relationship("ContractRoleCost", back_populates="contract", cascade="all, delete-orphan")
     client = relationship("Client", back_populates="contracts")
     tickets = relationship("Ticket", back_populates="contracts")
+    services = relationship("ContractService", back_populates="contract", cascade="all, delete-orphan")
+    service_bundles = relationship("ContractServiceBundle", back_populates="contract", cascade="all, delete-orphan")
+
 
 class ContractBlock(Base):
     __tablename__ = 'contract_blocks'
@@ -32,6 +35,16 @@ class ContractBlock(Base):
     description = Column(Text, nullable=True)
 
     contract = relationship("Contract", back_populates="blocks")
+
+class ContractFixedCost(Base):
+    __tablename__ = 'contract_fixed_charges'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
+    amount = Column(Float, nullable=False)
+    description = Column(Text, nullable=True)
+
+    contract = relationship("Contract", back_populates="fixed_costs")
 
 
 class ContractMilestone(Base):
@@ -98,3 +111,42 @@ class ContractRoleCost(Base):
     cost = Column(Float, nullable=False)
 
     contract = relationship("Contract", back_populates="role_costs")
+
+
+class ContractService(Base):
+    __tablename__ = 'contract_services'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
+    service_name = Column(String(255), nullable=False)
+    price = Column(Float, nullable=False)
+    cost = Column(Float, nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+
+    contract = relationship("Contract", back_populates="services")
+
+
+class ContractServiceBundle(Base):
+    __tablename__ = 'contract_service_bundles'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
+    bundle_name = Column(String(255), nullable=False)
+    price = Column(Float, nullable=False)
+    cost = Column(Float, nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+
+    contract = relationship("Contract", back_populates="service_bundles")
+    units = relationship("ContractServiceBundleUnit", back_populates="bundle", cascade="all, delete-orphan")
+
+
+class ContractServiceBundleUnit(Base):
+    __tablename__ = 'contract_service_bundle_units'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    bundle_id = Column(Integer, ForeignKey('contract_service_bundles.id'), nullable=False)
+    unit_count = Column(Integer, nullable=False)
+
+    bundle = relationship("ContractServiceBundle", back_populates="units")
