@@ -682,3 +682,72 @@ async def delete_billing_milestone_status(status_id: int, db: Session = Depends(
     db.delete(db_status)
     db.commit()
     return db_status
+
+
+
+@router.get("/services", response_model=List[ServiceSchema])
+async def get_services(db: Session = Depends(get_db)):
+    services = db.query(Service).all()
+    return services
+
+@router.post("/services", response_model=ServiceSchema)
+async def create_service(service: ServiceSchema, db: Session = Depends(get_db)):
+    db_service = Service(**service.dict())
+    db.add(db_service)
+    db.commit()
+    db.refresh(db_service)
+    return db_service
+
+@router.put("/services/{service_id}", response_model=ServiceSchema)
+async def update_service(service_id: int, service_data: ServiceSchema, db: Session = Depends(get_db)):
+    db_service = db.query(Service).filter(Service.id == service_id).first()
+    if not db_service:
+        raise HTTPException(status_code=404, detail="Service not found")
+    for key, value in service_data.dict(exclude_unset=True).items():
+        setattr(db_service, key, value)
+    db.commit()
+    db.refresh(db_service)
+    return db_service
+
+@router.delete("/services/{service_id}", response_model=ServiceSchema)
+async def delete_service(service_id: int, db: Session = Depends(get_db)):
+    db_service = db.query(Service).filter(Service.id == service_id).first()
+    if not db_service:
+        raise HTTPException(status_code=404, detail="Service not found")
+    db.delete(db_service)
+    db.commit()
+    return db_service
+
+@router.get("/service-bundles", response_model=List[ServiceBundleSchema])
+async def get_service_bundles(db: Session = Depends(get_db)):
+    bundles = db.query(ServiceBundle).all()
+    return bundles
+
+@router.post("/service-bundles", response_model=ServiceBundleSchema)
+async def create_service_bundle(bundle: ServiceBundleSchema, db: Session = Depends(get_db)):
+    db_bundle = ServiceBundle(**bundle.dict())
+    db.add(db_bundle)
+    db.commit()
+    db.refresh(db_bundle)
+    return db_bundle
+
+@router.put("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
+async def update_service_bundle(bundle_id: int, bundle_data: ServiceBundleSchema, db: Session = Depends(get_db)):
+    db_bundle = db.query(ServiceBundle).filter(ServiceBundle.id == bundle_id).first()
+    if not db_bundle:
+        raise HTTPException(status_code=404, detail="Service bundle not found")
+    for key, value in bundle_data.dict(exclude_unset=True).items():
+        setattr(db_bundle, key, value)
+    db.commit()
+    db.refresh(db_bundle)
+    return db_bundle
+
+@router.delete("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
+async def delete_service_bundle(bundle_id: int, db: Session = Depends(get_db)):
+    db_bundle = db.query(ServiceBundle).filter(ServiceBundle.id == bundle_id).first()
+    if not db_bundle:
+        raise HTTPException(status_code=404, detail="Service bundle not found")
+    db.delete(db_bundle)
+    db.commit()
+    return db_bundle
+
