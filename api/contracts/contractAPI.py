@@ -28,7 +28,7 @@ from schemas.contracts.contractSchema import ContractSchema, ContractCreate, Con
     ContractRateCreate, ContractRoleCostSchema, ContractRoleCostCreate, ContractServiceSchema, ContractServiceCreate, \
     ContractServiceBundleSchema, ContractServiceBundleCreate, ContractServiceBundleUnitSchema, \
     ContractServiceBundleUnitCreate, BillingMilestoneStatusCreate, BillingMilestoneStatusSchema, ContractCategorySchema, \
-    ContractCategoryCreate, ContractTypeSchema, ContractTypeCreate
+    ContractCategoryCreate, ContractTypeSchema, ContractTypeCreate, ContractFullCreate
 
 from root.root_elements import router
 
