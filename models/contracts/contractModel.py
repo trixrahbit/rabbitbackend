@@ -25,7 +25,7 @@ class Contract(Base):
     role_costs = relationship("ContractRoleCost", back_populates="contract", cascade="all, delete-orphan")
     fixed_costs = relationship("ContractFixedCost", back_populates="contract", cascade="all, delete-orphan")
 
-    # Relationships for linking global services and bundles:
+    # Linking tables for global services and bundles:
     service_assignments = relationship("ContractServiceAssignment", back_populates="contract", cascade="all, delete-orphan")
     bundle_assignments = relationship("ContractServiceBundleAssignment", back_populates="contract", cascade="all, delete-orphan")
 
@@ -118,7 +118,7 @@ class ContractRoleCost(Base):
 # ------------------------
 
 class Service(Base):
-    __tablename__ = 'contract_services'
+    __tablename__ = 'services'  # Updated table name to "services"
     id = Column(Integer, primary_key=True, autoincrement=True)
     service_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
@@ -126,12 +126,12 @@ class Service(Base):
 
 
 class ServiceBundle(Base):
-    __tablename__ = 'Contract_service_bundles'
+    __tablename__ = 'service_bundles'  # Updated table name to "service_bundles"
     id = Column(Integer, primary_key=True, autoincrement=True)
     bundle_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
     cost = Column(Float, nullable=False)
-    # Optionally, you can add additional fields here
+    # Additional fields can be added as needed.
 
 
 # ------------------------
@@ -143,7 +143,7 @@ class ContractServiceAssignment(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
     service_id = Column(Integer, ForeignKey('services.id'), nullable=False)
-    # Contract-specific overrides (if needed)
+    # Contract-specific overrides
     price = Column(Float, nullable=True)
     cost = Column(Float, nullable=True)
     units = Column(Integer, nullable=True)
