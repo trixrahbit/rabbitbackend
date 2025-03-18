@@ -133,6 +133,8 @@ class Service(Base):
     price = Column(Float, nullable=False)
     cost = Column(Float, nullable=False)
 
+    bundles = relationship("ServiceBundle", secondary=service_bundle_association, back_populates="services")
+
 
 class ServiceBundle(Base):
     __tablename__ = 'contract_service_bundles'  # Make sure this matches your DB
