@@ -39,7 +39,7 @@ from schemas.contracts.contractSchema import (
     BillingMilestoneStatusSchema, BillingMilestoneStatusCreate,
     ServiceSchema, ServiceBundleSchema,
     ContractServiceAssignmentSchema, ContractServiceAssignmentCreate,
-    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate
+    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate, ServiceBase
 )
 
 from root.root_elements import router
@@ -691,12 +691,13 @@ async def get_services(db: Session = Depends(get_db)):
     return services
 
 @router.post("/services", response_model=ServiceSchema)
-async def create_service(service: ServiceSchema, db: Session = Depends(get_db)):
+async def create_service(service: ServiceBase, db: Session = Depends(get_db)):
     db_service = Service(**service.dict())
     db.add(db_service)
     db.commit()
     db.refresh(db_service)
     return db_service
+
 
 @router.put("/services/{service_id}", response_model=ServiceSchema)
 async def update_service(service_id: int, service_data: ServiceSchema, db: Session = Depends(get_db)):
