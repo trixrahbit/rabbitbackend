@@ -40,7 +40,8 @@ from schemas.contracts.contractSchema import (
     BillingMilestoneStatusSchema, BillingMilestoneStatusCreate,
     ServiceSchema, ServiceBundleSchema,
     ContractServiceAssignmentSchema, ContractServiceAssignmentCreate,
-    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate, ServiceBase, ServiceBundleBase
+    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate, ServiceBase, ServiceBundleBase,
+    ServiceBundleCreate
 )
 
 from root.root_elements import router
