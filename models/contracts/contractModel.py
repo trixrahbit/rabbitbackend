@@ -118,7 +118,7 @@ class ContractRoleCost(Base):
 # ------------------------
 
 class Service(Base):
-    __tablename__ = 'services'  # Updated table name to "services"
+    __tablename__ = 'contract_services'  # Updated table name to "services"
     id = Column(Integer, primary_key=True, autoincrement=True)
     service_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
@@ -126,7 +126,7 @@ class Service(Base):
 
 
 class ServiceBundle(Base):
-    __tablename__ = 'service_bundles'  # Updated table name to "service_bundles"
+    __tablename__ = 'contract_service_bundles'  # Updated table name to "service_bundles"
     id = Column(Integer, primary_key=True, autoincrement=True)
     bundle_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
