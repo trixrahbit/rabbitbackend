@@ -33,6 +33,16 @@ class ContractSchema(ContractBase):
 class ContractUpdate(ContractBase):
     pass
 
+class ContractFullCreate(ContractCreate):
+    blocks: Optional[List["ContractBlockCreate"]] = []
+    fixed_costs: Optional[List["ContractFixedCostCreate"]] = []
+    milestones: Optional[List["ContractMilestoneCreate"]] = []
+    charges: Optional[List["ContractChargeCreate"]] = []
+    exclusions: Optional[List["ContractExclusionCreate"]] = []
+    rates: Optional[List["ContractRateCreate"]] = []
+    role_costs: Optional[List["ContractRoleCostCreate"]] = []
+    services: Optional[List["ContractServiceCreate"]] = []
+    service_bundles: Optional[List["ContractServiceBundleCreate"]] = []
 
 # ------------------------
 # Contract Block Schemas

@@ -77,6 +77,115 @@ async def delete_contract(contract_id: int, db: Session = Depends(get_db)):
     db.commit()
     return contract
 
+
+@router.post("/contracts/full", response_model=ContractSchema)
+async def create_full_contract(contract: ContractFullCreate, db: Session = Depends(get_db)):
+    try:
+        # Start a transaction
+        with db.begin():
+            # Create the main contract without nested fields.
+            contract_data = contract.dict(
+                exclude_unset=True,
+                exclude={"blocks", "fixed_costs", "milestones", "charges", "exclusions", "rates", "role_costs",
+                         "services", "service_bundles"}
+            )
+            db_contract = Contract(**contract_data)
+            db.add(db_contract)
+            db.flush()  # flush to get contract.id
+
+            # Create nested Contract Blocks if provided.
+            if contract.blocks:
+                for block in contract.blocks:
+                    block_data = block.dict()
+                    block_data["contract_id"] = db_contract.id
+                    db_block = ContractBlock(**block_data)
+                    db.add(db_block)
+
+            # Create nested Fixed Costs if provided.
+            if contract.fixed_costs:
+                for cost in contract.fixed_costs:
+                    cost_data = cost.dict()
+                    cost_data["contract_id"] = db_contract.id
+                    db_cost = ContractFixedCost(**cost_data)
+                    db.add(db_cost)
+
+            # Create nested Milestones if provided.
+            if contract.milestones:
+                for milestone in contract.milestones:
+                    milestone_data = milestone.dict()
+                    milestone_data["contract_id"] = db_contract.id
+                    db_milestone = ContractMilestone(**milestone_data)
+                    db.add(db_milestone)
+
+            # Create nested Charges if provided.
+            if contract.charges:
+                for charge in contract.charges:
+                    charge_data = charge.dict()
+                    charge_data["contract_id"] = db_contract.id
+                    db_charge = ContractCharge(**charge_data)
+                    db.add(db_charge)
+
+            # Create nested Exclusions if provided.
+            if contract.exclusions:
+                for exclusion in contract.exclusions:
+                    exclusion_data = exclusion.dict()
+                    exclusion_data["contract_id"] = db_contract.id
+                    db_exclusion = ContractExclusion(**exclusion_data)
+                    db.add(db_exclusion)
+                    # Optionally, create nested billing codes for this exclusion.
+                    if exclusion.billing_codes:
+                        for code in exclusion.billing_codes:
+                            code_data = code.dict()
+                            code_data["exclusion_id"] = db_exclusion.id
+                            db_code = ExclusionBillingCode(**code_data)
+                            db.add(db_code)
+
+            # Create nested Rates if provided.
+            if contract.rates:
+                for rate in contract.rates:
+                    rate_data = rate.dict()
+                    rate_data["contract_id"] = db_contract.id
+                    db_rate = ContractRate(**rate_data)
+                    db.add(db_rate)
+
+            # Create nested Role Costs if provided.
+            if contract.role_costs:
+                for role_cost in contract.role_costs:
+                    role_cost_data = role_cost.dict()
+                    role_cost_data["contract_id"] = db_contract.id
+                    db_role_cost = ContractRoleCost(**role_cost_data)
+                    db.add(db_role_cost)
+
+            # Create nested Services if provided.
+            if contract.services:
+                for service in contract.services:
+                    service_data = service.dict()
+                    service_data["contract_id"] = db_contract.id
+                    db_service = ContractService(**service_data)
+                    db.add(db_service)
+
+            # Create nested Service Bundles if provided.
+            if contract.service_bundles:
+                for bundle in contract.service_bundles:
+                    bundle_data = bundle.dict(exclude={"units"})
+                    bundle_data["contract_id"] = db_contract.id
+                    db_bundle = ContractServiceBundle(**bundle_data)
+                    db.add(db_bundle)
+                    db.flush()  # flush to get bundle.id
+                    # Create nested Bundle Units if provided.
+                    if bundle.units:
+                        for unit in bundle.units:
+                            unit_data = unit.dict()
+                            unit_data["bundle_id"] = db_bundle.id
+                            db_unit = ContractServiceBundleUnit(**unit_data)
+                            db.add(db_unit)
+        db.commit()
+        db.refresh(db_contract)
+        return db_contract
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 # --------------------
 # Contract Block Endpoints
 # --------------------
