@@ -125,6 +125,8 @@ class Service(Base):
     cost = Column(Float, nullable=False)
 
 
+
+
 class ServiceBundle(Base):
     __tablename__ = 'contract_service_bundles'  # Updated table name to "service_bundles"
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -142,7 +144,7 @@ class ContractServiceAssignment(Base):
     __tablename__ = 'contract_service_assignments'
     id = Column(Integer, primary_key=True, autoincrement=True)
     contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
-    service_id = Column(Integer, ForeignKey('services.id'), nullable=False)
+    service_id = Column(Integer, ForeignKey('contract_services.id'), nullable=False)
     # Contract-specific overrides
     price = Column(Float, nullable=True)
     cost = Column(Float, nullable=True)
@@ -156,7 +158,7 @@ class ContractServiceBundleAssignment(Base):
     __tablename__ = 'contract_service_bundle_assignments'
     id = Column(Integer, primary_key=True, autoincrement=True)
     contract_id = Column(Integer, ForeignKey('contracts.id'), nullable=False)
-    bundle_id = Column(Integer, ForeignKey('service_bundles.id'), nullable=False)
+    bundle_id = Column(Integer, ForeignKey('contract_service_bundles.id'), nullable=False)
     units = Column(Integer, nullable=True)
 
     contract = relationship("Contract", back_populates="bundle_assignments")
