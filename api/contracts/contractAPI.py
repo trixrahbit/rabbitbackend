@@ -748,11 +748,13 @@ async def create_service_bundle(bundle: ServiceBundleCreate, db: Session = Depen
     if bundle.service_ids:
         # Query the Service objects by their IDs.
         services = db.query(Service).filter(Service.id.in_(bundle.service_ids)).all()
+        # Associate the queried services with the bundle.
         db_bundle.services = services
         db.commit()
         db.refresh(db_bundle)
 
     return db_bundle
+
 
 
 @router.put("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
