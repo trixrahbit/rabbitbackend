@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from db_config.db_connection import Base
+from models import service_bundle_association
+
 
 # ------------------------
 # Contract Model and Related Tables
@@ -116,12 +118,7 @@ class ContractRoleCost(Base):
 # ------------------------
 # Global Service and Bundle Models
 # ------------------------
-service_bundle_association = Table(
-    'service_bundle_association',  # This is the name SQL Server will look for.
-    Base.metadata,
-    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id'), primary_key=True),
-    Column('service_id', Integer, ForeignKey('contract_services.id'), primary_key=True)
-)
+
 
 class Service(Base):
     __tablename__ = 'contract_services'  # Updated table name to "services"
