@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Date, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from db_config.db_connection import Base
 
@@ -116,6 +116,13 @@ class ContractRoleCost(Base):
 # ------------------------
 # Global Service and Bundle Models
 # ------------------------
+service_bundle_association = Table(
+    'service_bundle_association',
+    Base.metadata,
+    Column('service_bundle_id', Integer, ForeignKey('contract_service_bundles.id')),
+    Column('service_id', Integer, ForeignKey('contract_services.id'))
+)
+
 
 class Service(Base):
     __tablename__ = 'contract_services'  # Updated table name to "services"
@@ -128,12 +135,14 @@ class Service(Base):
 
 
 class ServiceBundle(Base):
-    __tablename__ = 'contract_service_bundles'  # Updated table name to "service_bundles"
+    __tablename__ = 'contract_service_bundles'  # Table name remains as before.
     id = Column(Integer, primary_key=True, autoincrement=True)
     bundle_name = Column(String(255), nullable=False)
     price = Column(Float, nullable=False)
     cost = Column(Float, nullable=False)
-    # Additional fields can be added as needed.
+    # Define relationship: A bundle can have many services.
+    services = relationship("Service", secondary=service_bundle_association, backref="bundles")
+
 
 
 # ------------------------
