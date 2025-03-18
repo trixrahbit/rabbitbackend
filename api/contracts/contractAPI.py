@@ -42,6 +42,19 @@ async def get_contracts(db: Session = Depends(get_db)):
     contracts = db.query(Contract).all()
     return contracts
 
+@router.post("/contracts/services" , response_model=ContractServiceSchema)
+async def create_contract_service(service: ContractServiceCreate, db: Session = Depends(get_db)):
+    db_service = ContractService(**service.dict())
+    db.add(db_service)
+    db.commit()
+    db.refresh(db_service)
+    return db_service
+
+@router.get("/contracts/services", response_model=List[ContractServiceSchema])
+async def get_contract_services(db: Session = Depends(get_db)):
+    services = db.query(ContractService).all()
+    return services
+
 @router.get("/contracts/{contract_id}", response_model=ContractSchema)
 async def get_contract(contract_id: int, db: Session = Depends(get_db)):
     contract = db.query(Contract).filter(Contract.id == contract_id).first()
@@ -527,19 +540,6 @@ async def delete_contract_role_cost(contract_id: int, role_cost_id: int, db: Ses
 # --------------------
 # Contract Service Endpoints
 # --------------------
-
-@router.post("/contracts/services" , response_model=ContractServiceSchema)
-async def create_contract_service(service: ContractServiceCreate, db: Session = Depends(get_db)):
-    db_service = ContractService(**service.dict())
-    db.add(db_service)
-    db.commit()
-    db.refresh(db_service)
-    return db_service
-
-@router.get("/contracts/services", response_model=List[ContractServiceSchema])
-async def get_contract_services(db: Session = Depends(get_db)):
-    services = db.query(ContractService).all()
-    return services
 
 
 @router.get("/contracts/{contract_id}/services", response_model=List[ContractServiceSchema])
