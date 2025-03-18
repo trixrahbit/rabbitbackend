@@ -1,5 +1,6 @@
 import loguru as logging
 from fastapi import Depends, HTTPException
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from typing import List
 from db_config.db_connection import get_db
@@ -39,7 +40,7 @@ from schemas.contracts.contractSchema import (
     BillingMilestoneStatusSchema, BillingMilestoneStatusCreate,
     ServiceSchema, ServiceBundleSchema,
     ContractServiceAssignmentSchema, ContractServiceAssignmentCreate,
-    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate, ServiceBase
+    ContractServiceBundleAssignmentSchema, ContractServiceBundleAssignmentCreate, ServiceBase, ServiceBundleBase
 )
 
 from root.root_elements import router
@@ -725,15 +726,19 @@ async def get_service_bundles(db: Session = Depends(get_db)):
     return bundles
 
 @router.post("/service-bundles", response_model=ServiceBundleSchema)
-async def create_service_bundle(bundle: ServiceBundleSchema, db: Session = Depends(get_db)):
-    db_bundle = ServiceBundle(**bundle.dict())
-    db.add(db_bundle)
-    db.commit()
-    db.refresh(db_bundle)
-    return db_bundle
+async def create_service_bundle(bundle: ServiceBundleBase, db: Session = Depends(get_db)):
+    try:
+        db_bundle = ServiceBundle(**bundle.dict())
+        db.add(db_bundle)
+        db.commit()
+        db.refresh(db_bundle)
+        return db_bundle
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/service-bundles/{bundle_id}", response_model=ServiceBundleSchema)
-async def update_service_bundle(bundle_id: int, bundle_data: ServiceBundleSchema, db: Session = Depends(get_db)):
+async def update_service_bundle(bundle_id: int, bundle_data: ServiceBundleBase, db: Session = Depends(get_db)):
     db_bundle = db.query(ServiceBundle).filter(ServiceBundle.id == bundle_id).first()
     if not db_bundle:
         raise HTTPException(status_code=404, detail="Service bundle not found")
