@@ -133,7 +133,6 @@ class Service(Base):
     price = Column(Float, nullable=False)
     cost = Column(Float, nullable=False)
 
-    bundles = relationship("ServiceBundle", secondary=service_bundle_association, back_populates="services")
 
 
 class ServiceBundle(Base):
